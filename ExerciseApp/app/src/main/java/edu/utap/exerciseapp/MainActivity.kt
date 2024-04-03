@@ -1,4 +1,4 @@
-package edu.utap.photolist
+package edu.utap.exerciseapp
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,7 +12,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import edu.utap.photolist.databinding.ActivityMainBinding
+import edu.utap.exerciseapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

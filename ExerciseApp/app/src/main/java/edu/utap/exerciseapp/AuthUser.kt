@@ -1,4 +1,4 @@
-package edu.utap.photolist
+package edu.utap.exerciseapp
 
 import android.content.Intent
 import android.util.Log

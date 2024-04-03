@@ -1,4 +1,4 @@
-package edu.utap.photolist.view
+package edu.utap.exerciseapp.view
 
 import android.content.Context
 import android.net.Uri
@@ -6,7 +6,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.FileProvider
-import edu.utap.photolist.MainViewModel
+import edu.utap.exerciseapp.MainViewModel
 import java.io.File
 import java.util.UUID
 

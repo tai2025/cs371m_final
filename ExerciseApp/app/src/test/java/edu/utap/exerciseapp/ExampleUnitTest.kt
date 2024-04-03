@@ -1,4 +1,4 @@
-package edu.utap.photolist
+package edu.utap.exerciseapp
 
 import org.junit.Test
 

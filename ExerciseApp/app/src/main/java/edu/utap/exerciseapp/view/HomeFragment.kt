@@ -1,6 +1,5 @@
-package edu.utap.photolist.view
+package edu.utap.exerciseapp.view
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,12 +10,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
-import edu.utap.photolist.MainActivity
-import edu.utap.photolist.MainViewModel
-import edu.utap.photolist.R
-import edu.utap.photolist.SortColumn
-import edu.utap.photolist.databinding.FragmentHomeBinding
+import edu.utap.exerciseapp.MainActivity
+import edu.utap.exerciseapp.MainViewModel
+import edu.utap.exerciseapp.R
+import edu.utap.exerciseapp.databinding.FragmentHomeBinding
 
 class HomeFragment :
     Fragment(R.layout.fragment_home) {

@@ -1,4 +1,4 @@
-package edu.utap.photolist.model
+package edu.utap.exerciseapp.model
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId

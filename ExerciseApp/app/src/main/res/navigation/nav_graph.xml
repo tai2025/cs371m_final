@@ -6,6 +6,6 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="edu.utap.photolist.view.HomeFragment"
+        android:name="edu.utap.exerciseapp.view.HomeFragment"
         android:label="Photo list" />
 </navigation>

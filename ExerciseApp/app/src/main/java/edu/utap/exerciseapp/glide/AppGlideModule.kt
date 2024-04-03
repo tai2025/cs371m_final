@@ -1,7 +1,6 @@
-package edu.utap.photolist.glide
+package edu.utap.exerciseapp.glide
 
 import android.content.Context
-import android.util.Log
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Registry

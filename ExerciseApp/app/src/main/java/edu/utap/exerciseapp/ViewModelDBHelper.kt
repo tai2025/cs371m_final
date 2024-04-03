@@ -1,9 +1,9 @@
-package edu.utap.photolist
+package edu.utap.exerciseapp
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import edu.utap.photolist.model.PhotoMeta
+import edu.utap.exerciseapp.model.PhotoMeta
 
 class ViewModelDBHelper {
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()

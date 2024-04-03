@@ -1,13 +1,12 @@
-package edu.utap.photolist
+package edu.utap.exerciseapp
 
-import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import edu.utap.photolist.glide.Glide
-import edu.utap.photolist.model.PhotoMeta
-import edu.utap.photolist.view.TakePictureWrapper
+import edu.utap.exerciseapp.glide.Glide
+import edu.utap.exerciseapp.model.PhotoMeta
+import edu.utap.exerciseapp.view.TakePictureWrapper
 
 enum class SortColumn {
     TITLE,

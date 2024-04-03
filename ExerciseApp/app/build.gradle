@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'edu.utap.photolist'
+    namespace 'edu.utap.exerciseapp'
     compileSdk 34
 
     defaultConfig {
-        applicationId "edu.utap.photolist"
+        applicationId "edu.utap.exerciseapp"
         minSdk 31
         targetSdk 34
         versionCode 1
@@ -66,4 +66,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     kapt 'com.github.bumptech.glide:compiler:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+    implementation 'com.github.TutorialsAndroid:GButton:v1.0.19'
+    implementation 'com.google.android.gms:play-services-auth:20.4.0'
 }

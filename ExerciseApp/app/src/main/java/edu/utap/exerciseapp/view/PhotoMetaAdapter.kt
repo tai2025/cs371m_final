@@ -1,13 +1,13 @@
-package edu.utap.photolist.view
+package edu.utap.exerciseapp.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import edu.utap.photolist.MainViewModel
-import edu.utap.photolist.databinding.RowBinding
-import edu.utap.photolist.model.PhotoMeta
+import edu.utap.exerciseapp.MainViewModel
+import edu.utap.exerciseapp.databinding.RowBinding
+import edu.utap.exerciseapp.model.PhotoMeta
 
 
 class PhotoMetaAdapter(private val viewModel: MainViewModel)
