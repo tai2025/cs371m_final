@@ -1,30 +1,25 @@
 package edu.utap.exerciseapp
 
 //import android.R
-import android.R.layout
-import android.R.menu
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import edu.utap.exerciseapp.LoginActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
-import androidx.fragment.app.Fragment
 
 class SecondFragment:Fragment(R.layout.home_page)
 
@@ -81,10 +76,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
+
         // Set the layout for the layout we created
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initMenu()
+        gOptions =
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
+        gClient = GoogleSignIn.getClient(this, gOptions!!)
 
         val secondFragment=SecondFragment()
         val thirdFragment=ThirdFragment()
@@ -97,8 +96,8 @@ class MainActivity : AppCompatActivity() {
         // No need to override onSupportNavigateUp(), because no up navigation
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.home -> setCurrentFragment(secondFragment)
-                R.id.person -> setCurrentFragment(secondFragment)
+                R.id.nutrition -> setCurrentFragment(secondFragment)
+                R.id.programs -> setCurrentFragment(secondFragment)
                 R.id.settings -> setCurrentFragment(thirdFragment)
 
             }
@@ -111,7 +110,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         Log.d(TAG, "onStart")
         // Create authentication object.  This will log the user in if needed
-        authUser = AuthUser(activityResultRegistry)
+        authUser = gClient?.let { AuthUser(activityResultRegistry, this, it) }!!
         // authUser needs to observe our lifecycle so it can run login activity
         lifecycle.addObserver(authUser)
         viewModel.fetchPhotoMeta {  }

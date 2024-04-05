@@ -22,6 +22,7 @@ class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivitySignUpBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_sign_up)
         auth = FirebaseAuth.getInstance()
         signupEmail = findViewById<EditText>(R.id.signup_email)

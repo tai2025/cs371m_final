@@ -23,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import edu.utap.exerciseapp.databinding.ActivityLoginBinding
+import edu.utap.exerciseapp.databinding.ActivityMainBinding
 
 class LoginActivity : AppCompatActivity() {
     private var loginEmail: EditText? = null
@@ -37,7 +38,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(R.layout.activity_login)
         loginEmail = binding.loginEmail
         loginPassword = binding.loginPassword
         loginButton = binding.loginButton

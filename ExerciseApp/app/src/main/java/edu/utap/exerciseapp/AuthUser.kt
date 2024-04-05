@@ -1,19 +1,25 @@
 package edu.utap.exerciseapp
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import edu.utap.exerciseapp.LoginActivity
+
 
 // This is our abstract concept of a User, which is visible
 // outside AuthUser.  That way, client code will not change
@@ -32,9 +38,10 @@ fun User.isInvalid(): Boolean {
 val invalidUser = User(null, null,
     invalidUserUid)
 
-class AuthUser(private val registry: ActivityResultRegistry) :
+class AuthUser(private val registry: ActivityResultRegistry, val context: Context, gClient: GoogleSignInClient) :
     DefaultLifecycleObserver,
     FirebaseAuth.AuthStateListener {
+        private var gClient: GoogleSignInClient = gClient
     companion object {
         private const val TAG = "AuthUser"
     }
@@ -48,6 +55,7 @@ class AuthUser(private val registry: ActivityResultRegistry) :
         // Listen to FirebaseAuth state
         // That way, if the server logs us out, we know it and change the view
         Firebase.auth.addAuthStateListener(this)
+
     }
 
     fun observeUser(): LiveData<User> {
@@ -109,5 +117,13 @@ class AuthUser(private val registry: ActivityResultRegistry) :
     fun logout() {
         if(user() == null) return
         Firebase.auth.signOut()
+        val intent = Intent(context, LoginActivity::class.java)
+        startActivity(context, intent, null)
+
+        gClient.signOut().addOnCompleteListener(OnCompleteListener<Void?> {
+            Firebase.auth.signOut()
+            val intent = Intent(context, LoginActivity::class.java)
+            startActivity(context, intent, null)
+        })
     }
 }

@@ -69,16 +69,16 @@ class HomeFragment :
         Log.d(javaClass.simpleName, "onViewCreated")
         val mainActivity = (requireActivity() as MainActivity)
 
-        // Long press to edit.
-        val adapter = PhotoMetaAdapter(viewModel)
-
-        val rv = binding.photosRV
-        val itemDecor = DividerItemDecoration(rv.context, LinearLayoutManager.VERTICAL)
-        rv.addItemDecoration(itemDecor)
-        rv.adapter = adapter
-        rv.layoutManager = LinearLayoutManager(rv.context)
-        // Swipe left to delete
-        initTouchHelper().attachToRecyclerView(rv)
+//        // Long press to edit.
+//        val adapter = PhotoMetaAdapter(viewModel)
+//
+//        val rv = binding.photosRV
+//        val itemDecor = DividerItemDecoration(rv.context, LinearLayoutManager.VERTICAL)
+//        rv.addItemDecoration(itemDecor)
+//        rv.adapter = adapter
+//        rv.layoutManager = LinearLayoutManager(rv.context)
+//        // Swipe left to delete
+//        initTouchHelper().attachToRecyclerView(rv)
 
         // XXX Write me, onclick listeners and observers
     }
