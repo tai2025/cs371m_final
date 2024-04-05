@@ -24,7 +24,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
+import androidx.fragment.app.Fragment
 
+class SecondFragment:Fragment(R.layout.home_page)
+
+class ThirdFragment:Fragment(R.layout.profile_page)
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -68,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun setCurrentFragment(fragment:Fragment)=
+    supportFragmentManager.beginTransaction().apply {
+        replace(R.id.mainFrame,fragment)
+        commit()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate")
@@ -76,12 +86,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initMenu()
 
+        val secondFragment=SecondFragment()
+        val thirdFragment=ThirdFragment()
 
         // Set up our nav graph
         navController = findNavController(R.id.mainFrame)
         val appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
         // No need to override onSupportNavigateUp(), because no up navigation
+        binding.bottomNavigationView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.home -> setCurrentFragment(secondFragment)
+                R.id.person -> setCurrentFragment(secondFragment)
+                R.id.settings -> setCurrentFragment(thirdFragment)
+
+            }
+            true
+        }
     }
 
     // We can only safely initialize AuthUser once onCreate has completed.
