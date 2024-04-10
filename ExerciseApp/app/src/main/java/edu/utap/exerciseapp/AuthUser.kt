@@ -106,6 +106,8 @@ class AuthUser(private val registry: ActivityResultRegistry, val context: Contex
 
             // XXX Write me. Create and launch sign-in intent
             // setIsSmartLockEnabled(false) solves some problems
+//            val intent = Intent(context, LoginActivity::class.java)
+//            startActivity(context, intent, null)
             val signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)

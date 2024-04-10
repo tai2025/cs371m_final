@@ -1,30 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    >
-<ImageView
-    android:layout_width="0dp"
-    android:layout_height="wrap_content"
-    android:layout_weight="2"
-    android:layout_gravity="center_horizontal"
-    android:id="@+id/rowImageView"
-    />
-    <TextView
-        android:layout_width="0dp"
+    android:layout_margin="8dp"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:textSize="24sp"
-        android:gravity="end"
-        android:id="@+id/row_picture_title"
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="24sp"
-        android:gravity="end"
-        android:id="@+id/rowSize"
-        />
-</LinearLayout>
+        android:layout_gravity="center_horizontal"
+        tools:context=".MainActivity"
+        android:layout_marginBottom="50dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/date"
+            android:text="date"
+            app:layout_constraintBottom_toTopOf="@id/workoutTable"/>
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/workoutTable"
+            android:stretchColumns="*"
+            app:layout_constraintTop_toBottomOf="@id/date"
+            tools:ignore="MissingConstraints">
+            <TableRow>
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/border"
+                            android:paddingHorizontal="10dp"
+                            android:text="Exercise"
+                            android:textSize="20dp"
+                            android:id="@+id/ExerciseHeader"/>
+                        <TextView
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:text="Sets"
+                            android:textSize="20dp"
+                            android:paddingHorizontal="10dp"
+                            android:background="@drawable/border"
+                            android:id="@+id/SetHeader"
+                            />
+                        <TextView
+                            android:layout_width="65dp"
+                            android:layout_height="wrap_content"
+                            android:text="Reps"
+                            android:textSize="20dp"
+                            android:paddingHorizontal="10dp"
+                            android:background="@drawable/border"
+                            android:id="@+id/RepHeader"
+                            />
+                        <TextView
+                            android:layout_width="85dp"
+                            android:layout_height="wrap_content"
+                            android:text="Weight"
+                            android:textSize="20dp"
+                            android:paddingHorizontal="10dp"
+                            android:background="@drawable/border"
+                            android:id="@+id/WeightHeader"
+                            />
+                        <TextView
+                            android:layout_width="57dp"
+                            android:layout_height="wrap_content"
+                            android:text="RPE"
+                            android:textSize="20dp"
+                            android:paddingHorizontal="10dp"
+                            android:background="@drawable/border"
+                            android:id="@+id/RPEHeader"
+                            />
+                        <TextView
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:text="Notes"
+                            android:textSize="20dp"
+                            android:paddingHorizontal="10dp"
+                            android:background="@drawable/border"
+                            android:id="@+id/NoteHeader"
+                            />
+                    </LinearLayout>
+                </HorizontalScrollView>
+            </TableRow>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addExercise"
+                android:text="Add Exercise"
+                app:layout_constraintTop_toBottomOf="@id/workoutTable"
+                tools:ignore="MissingConstraints">
+            </Button>
+        </TableLayout>
+<!--    <Button-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/addExercise"-->
+<!--        android:text="Add Exercise"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/workoutTable"-->
+<!--        tools:ignore="MissingConstraints">-->
+<!--    </Button>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

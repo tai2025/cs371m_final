@@ -20,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
+import edu.utap.exerciseapp.program.ProgramFragment
 
 class SecondFragment:Fragment(R.layout.home_page)
 
@@ -85,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gClient = GoogleSignIn.getClient(this, gOptions!!)
 
-        val secondFragment=SecondFragment()
+        val progFragment = ProgramFragment()
         val thirdFragment=ThirdFragment()
 
         // Set up our nav graph
@@ -96,8 +97,8 @@ class MainActivity : AppCompatActivity() {
         // No need to override onSupportNavigateUp(), because no up navigation
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.nutrition -> setCurrentFragment(secondFragment)
-                R.id.programs -> setCurrentFragment(secondFragment)
+                R.id.nutrition -> setCurrentFragment(progFragment)
+                R.id.programs -> setCurrentFragment(progFragment)
                 R.id.settings -> setCurrentFragment(thirdFragment)
 
             }
