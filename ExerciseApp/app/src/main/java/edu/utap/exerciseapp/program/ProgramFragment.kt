@@ -1,25 +1,29 @@
 package edu.utap.exerciseapp.program
 
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.TableLayout
-import android.widget.TableRow
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import edu.utap.exerciseapp.databinding.ProgramFragmentBinding
 import edu.utap.exerciseapp.model.WorkoutEntry
-import edu.utap.exerciseapp.R
 
 
 class ProgramFragment: Fragment() {
     private var _binding: ProgramFragmentBinding? = null
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
+
+
+    private val list = mutableListOf<WorkoutEntry>()
+    private val newlist = mutableListOf<WorkoutEntry>()
+
+    var db = FirebaseFirestore.getInstance()
+    var currentUser = FirebaseAuth.getInstance().currentUser
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +41,21 @@ class ProgramFragment: Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
         }
-        val list = mutableListOf<WorkoutEntry>()
+
+        if (currentUser != null) {
+            val uid = currentUser!!.uid
+            db.collection("users").document(uid).collection("workouts")
+                .get().addOnCompleteListener{
+                    if (it.isSuccessful) {
+                        for (w in it.result) {
+                            list.add(w.toObject(WorkoutEntry::class.java))
+                        }
+                    } else {
+                        Log.d("Error", "Error retrieving workout data")
+                    }
+                }
+        }
+
         val adapter = ProgramAdapter(list, requireContext().applicationContext)
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(binding.recyclerView.context)
@@ -51,6 +69,7 @@ class ProgramFragment: Fragment() {
 //            val exercise = WorkoutEntry.Workout()
 //            workout.addToList(exercise)
             list.add(workout)
+            newlist.add(workout)
             adapter.notifyDataSetChanged()
 //            row.findViewById<EditText>(R.id.Exercise).setOnEditorActionListener { /*v*/_, actionId, event ->
 //                if ((event != null
@@ -75,5 +94,22 @@ class ProgramFragment: Fragment() {
 //                .addToBackStack(null)
 //                .commit()
 //        }
+    }
+
+    override fun onDestroyView() {
+        if (currentUser != null) {
+            Log.d("Firestore", "Adding workouts to db")
+            for (workout in newlist) {
+                val uid = currentUser!!.uid
+                db.collection("users").document(uid).collection("workouts").add(workout)
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Success: ${it.id}")
+                    }
+                    .addOnFailureListener{
+                        Log.d("Firestore", "Error uploading workouts")
+                    }
+            }
+        }
+        super.onDestroyView()
     }
 }
