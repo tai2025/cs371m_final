@@ -11,5 +11,10 @@ class WorkoutEntry() {
     }
     class Workout() {
         var Exercise: String = ""
+        var Set: String = ""
+        var Rep: String = ""
+        var Weight: String = ""
+        var Note: String = ""
+        var RPE: String = ""
     }
 }

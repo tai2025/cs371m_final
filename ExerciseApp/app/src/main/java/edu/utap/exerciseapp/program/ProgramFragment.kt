@@ -96,7 +96,8 @@ class ProgramFragment: Fragment() {
 //        }
     }
 
-    override fun onDestroyView() {
+    override fun onPause() {
+        super.onPause()
         if (currentUser != null) {
             Log.d("Firestore", "Adding workouts to db")
             for (workout in newlist) {
@@ -110,6 +111,5 @@ class ProgramFragment: Fragment() {
                     }
             }
         }
-        super.onDestroyView()
     }
 }

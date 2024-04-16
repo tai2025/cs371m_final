@@ -49,17 +49,18 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
         for (exercise in workout.list) {
             val row = LayoutInflater.from(context).inflate(R.layout.exercise_row, null) as TableRow
             table.addView(row)
-            row.findViewById<EditText>(R.id.Exercise).setOnEditorActionListener { /*v*/_, actionId, event ->
-                if ((event != null
-                            &&(event.action == KeyEvent.ACTION_DOWN)
-                            &&(event.keyCode == KeyEvent.KEYCODE_ENTER))
-                    || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    exercise.Exercise = row.findViewById<EditText>(R.id.Exercise).text.toString()
+//            row.findViewById<EditText>(R.id.Exercise).setOnEditorActionListener { /*v*/_, actionId, event ->
+//                if ((event != null
+//                            &&(event.action == KeyEvent.ACTION_DOWN)
+//                            &&(event.keyCode == KeyEvent.KEYCODE_ENTER))
+//                    || (actionId == EditorInfo.IME_ACTION_DONE)) {
+//                    exercise.Exercise = row.findViewById<EditText>(R.id.Exercise).text.toString()
+//
+//                    true
+//                }
+//                false
+//            }
 
-                    true
-                }
-                false
-            }
 
         }
         binding.addExercise.setOnClickListener{
@@ -72,7 +73,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                             &&(event.action == KeyEvent.ACTION_DOWN)
                             &&(event.keyCode == KeyEvent.KEYCODE_ENTER))
                     || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    exercise.Exercise = row.findViewById<EditText>(R.id.Exercise).text.toString()
+                    //exercise.Exercise = row.findViewById<EditText>(R.id.Exercise).text.toString()
 
                     true
                 }
