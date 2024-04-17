@@ -1,6 +1,8 @@
 package edu.utap.exerciseapp
 
 //import android.R
+
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -21,6 +23,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
 import edu.utap.exerciseapp.program.ProgramFragment
+
 
 class SecondFragment:Fragment(R.layout.home_page)
 
@@ -59,7 +62,10 @@ class MainActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menuLogout -> {
-                        authUser.logout()
+                        gClient!!.signOut().addOnCompleteListener {
+                            finish()
+                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                        }
                         true
                     }
                     else -> false

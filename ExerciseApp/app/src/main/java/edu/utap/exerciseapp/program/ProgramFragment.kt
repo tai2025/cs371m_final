@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import edu.utap.exerciseapp.databinding.ProgramFragmentBinding
+import edu.utap.exerciseapp.model.EntryHolder
 import edu.utap.exerciseapp.model.WorkoutEntry
 
 
@@ -19,11 +21,13 @@ class ProgramFragment: Fragment() {
     private val binding get() = _binding!!
 
 
-    private val list = mutableListOf<WorkoutEntry>()
+    private var list = mutableListOf<WorkoutEntry>()
     private val newlist = mutableListOf<WorkoutEntry>()
 
     var db = FirebaseFirestore.getInstance()
     var currentUser = FirebaseAuth.getInstance().currentUser
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -41,46 +45,67 @@ class ProgramFragment: Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
         }
+        var adapter = ProgramAdapter(list, requireContext().applicationContext)
 
         if (currentUser != null) {
             val uid = currentUser!!.uid
-            db.collection("users").document(uid).collection("workouts")
+            db.collection("users").document(uid).collection("workouts").document("WorkoutList")
                 .get().addOnCompleteListener{
                     if (it.isSuccessful) {
-                        for (w in it.result) {
-                            list.add(w.toObject(WorkoutEntry::class.java))
+                        val document = it.result
+                        if (document.exists()) {
+                            val values = document.data?.values
+                            if (values != null) {
+                                for (v in values) {
+                                    val l = v as ArrayList<Map<String, Any>>
+                                    val map = l[0]
+                                    for (m in l) {
+
+                                        val workout = WorkoutEntry()
+                                        workout.setEntryNum(m["entryNum"].toString().toInt())
+                                        val exlist = m["list"] as ArrayList<Map<String, Any>>
+
+                                        for (ex in exlist) {
+                                            val exercise = WorkoutEntry.Workout()
+                                            exercise.Exercise = ex["exercise"].toString()
+                                            exercise.Note = ex["note"].toString()
+                                            exercise.Set = ex["set"].toString()
+                                            exercise.RPE = ex["rpe"].toString()
+                                            exercise.Weight = ex["weight"].toString()
+                                            exercise.Rep = ex["rep"].toString()
+                                            workout.addToList(exercise)
+                                        }
+                                        list.add(workout)
+                                    }
+                                }
+                            }
+                            Log.d("list", "$list")
+                            adapter.list = list
+                            adapter.notifyDataSetChanged()
+
                         }
+
                     } else {
                         Log.d("Error", "Error retrieving workout data")
                     }
                 }
         }
 
-        val adapter = ProgramAdapter(list, requireContext().applicationContext)
+        Log.d("adapter", "${adapter.itemCount}")
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(binding.recyclerView.context)
         binding.AddBut.setOnClickListener{
             val workout = WorkoutEntry()
-//            val table = view.findViewById<TableLayout>(R.id.workoutTable)
-//            val row = LayoutInflater.from(requireContext().applicationContext)
-//                .inflate(R.layout.exercise_row, table) as TableRow
-//            row.findViewById<EditText>(R.id.Exercise).setText("poop")
-//            binding.AddBut.setText(row.findViewById<EditText>(R.id.Exercise).text)
-//            val exercise = WorkoutEntry.Workout()
-//            workout.addToList(exercise)
+            workout.setEntryNum(list.size)
             list.add(workout)
+            for (l in list) {
+                for (workout in l.list) {
+                    Log.d("debugging", "${workout.Exercise}")
+                }
+                Log.d("lskdjlk", "lsdkjfkl")
+            }
             newlist.add(workout)
             adapter.notifyDataSetChanged()
-//            row.findViewById<EditText>(R.id.Exercise).setOnEditorActionListener { /*v*/_, actionId, event ->
-//                if ((event != null
-//                            &&(event.action == KeyEvent.ACTION_DOWN)
-//                            &&(event.keyCode == KeyEvent.KEYCODE_ENTER))
-//                    || (actionId == EditorInfo.IME_ACTION_DONE)) {
-//                    exercise.Exercise = row.findViewById<EditText>(R.id.Exercise).text.toString()
-//                    adapter.notifyDataSetChanged()
-//                }
-//                false
-//            }
         }
 
 //
@@ -96,20 +121,7 @@ class ProgramFragment: Fragment() {
 //        }
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (currentUser != null) {
-            Log.d("Firestore", "Adding workouts to db")
-            for (workout in newlist) {
-                val uid = currentUser!!.uid
-                db.collection("users").document(uid).collection("workouts").add(workout)
-                    .addOnSuccessListener {
-                        Log.d("Firestore", "Success: ${it.id}")
-                    }
-                    .addOnFailureListener{
-                        Log.d("Firestore", "Error uploading workouts")
-                    }
-            }
-        }
-    }
+
+
+
 }

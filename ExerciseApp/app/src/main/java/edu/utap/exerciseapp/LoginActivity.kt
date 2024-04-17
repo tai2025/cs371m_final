@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.util.Patterns
 import android.view.View
 import android.widget.Button
@@ -40,11 +41,11 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(R.layout.activity_login)
-        loginEmail = binding.loginEmail
-        loginPassword = binding.loginPassword
-        loginButton = binding.loginButton
-        signupRedirectText = binding.signUpRedirectText
-        forgotPassword = binding.forgotPassword
+        loginEmail = findViewById(R.id.login_email)
+        loginPassword = findViewById(R.id.login_password)
+        loginButton = findViewById(R.id.login_button)
+        signupRedirectText = findViewById(R.id.signUpRedirectText)
+        forgotPassword = findViewById(R.id.forgot_password)
         googleBtn = binding.googleBtn
         auth = FirebaseAuth.getInstance()
         loginButton!!.setOnClickListener(View.OnClickListener {
