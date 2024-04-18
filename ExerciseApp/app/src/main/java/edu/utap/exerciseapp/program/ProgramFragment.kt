@@ -48,6 +48,7 @@ class ProgramFragment: Fragment() {
         var adapter = ProgramAdapter(list, requireContext().applicationContext)
 
         if (currentUser != null) {
+            list.clear()
             val uid = currentUser!!.uid
             db.collection("users").document(uid).collection("workouts").document("WorkoutList")
                 .get().addOnCompleteListener{
@@ -57,8 +58,8 @@ class ProgramFragment: Fragment() {
                             val values = document.data?.values
                             if (values != null) {
                                 for (v in values) {
+                                    Log.d("val", "$v")
                                     val l = v as ArrayList<Map<String, Any>>
-                                    val map = l[0]
                                     for (m in l) {
 
                                         val workout = WorkoutEntry()

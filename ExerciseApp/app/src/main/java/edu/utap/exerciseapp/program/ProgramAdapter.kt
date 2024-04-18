@@ -16,6 +16,8 @@ import com.google.firebase.firestore.SetOptions
 import edu.utap.exerciseapp.R
 import edu.utap.exerciseapp.databinding.RowBinding
 import edu.utap.exerciseapp.model.WorkoutEntry
+import org.w3c.dom.Text
+import java.time.LocalDate
 
 
 /**
@@ -48,11 +50,13 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
         val workout = list.get(position)
         val binding = holder.rowBinding
         val table = binding.workoutTable
-        table.findViewById<TextView>(R.id.tableEntryNum).setText("$position")
+        Log.d("date", "local date is ${LocalDate.now()}")
+        binding.date.setText("${LocalDate.now()}")
         if (table.childCount > 3) {
             table.removeViews(3, table.childCount - 3)
         }
         var count = 0
+
         for (exercise in workout.list) {
             // populates row fields
             val row = LayoutInflater.from(context).inflate(R.layout.exercise_row, null) as TableRow
@@ -93,7 +97,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     val docData: MutableMap<String, Any> = HashMap()
                     docData["entries"] = list
                     db.collection("users").document(uid).collection("workouts")
-                        .document("WorkoutList").set(docData)
+                        .document("WorkoutList").set(docData, SetOptions.merge())
                         .addOnSuccessListener {
                             Log.d("Firestore", "Success")
                         }
@@ -139,7 +143,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                 val docData: MutableMap<String, Any> = HashMap()
                 docData["entries"] = list
                 db.collection("users").document(uid).collection("workouts")
-                    .document("WorkoutList").set(docData)
+                    .document("WorkoutList").set(docData, SetOptions.merge())
                     .addOnSuccessListener {
                         Log.d("Firestore", "Success")
                     }
