@@ -1,6 +1,8 @@
 package edu.utap.exerciseapp
 
 //import android.R
+
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -20,7 +23,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
+import edu.utap.exerciseapp.program.CalendarFragment
 import edu.utap.exerciseapp.program.ProgramFragment
+import edu.utap.exerciseapp.view.HomeFragmentDirections
+
 
 class SecondFragment:Fragment(R.layout.home_page)
 
@@ -29,6 +35,7 @@ class ThirdFragment:Fragment(R.layout.profile_page)
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var authUser : AuthUser
     private val viewModel: MainViewModel by viewModels()
 
@@ -59,7 +66,10 @@ class MainActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menuLogout -> {
-                        authUser.logout()
+                        gClient!!.signOut().addOnCompleteListener {
+                            finish()
+                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                        }
                         true
                     }
                     else -> false
@@ -88,22 +98,33 @@ class MainActivity : AppCompatActivity() {
 
         val progFragment = ProgramFragment()
         val thirdFragment=ThirdFragment()
+        val calFragment = CalendarFragment()
 
         // Set up our nav graph
         navController = findNavController(R.id.mainFrame)
-        val appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+
 
         // No need to override onSupportNavigateUp(), because no up navigation
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.nutrition -> setCurrentFragment(progFragment)
-                R.id.programs -> setCurrentFragment(progFragment)
+                R.id.nutrition -> setCurrentFragment(thirdFragment)
+                R.id.programs -> navController.safeNavigate(HomeFragmentDirections.actionHomeToCal())
                 R.id.settings -> setCurrentFragment(thirdFragment)
 
             }
             true
         }
+    }
+
+    private fun NavController.safeNavigate(direction: NavDirections) {
+        currentDestination?.
+                getAction(direction.actionId)?.
+                run{
+                    navigate(direction)
+                }
     }
 
     // We can only safely initialize AuthUser once onCreate has completed.
@@ -119,5 +140,10 @@ class MainActivity : AppCompatActivity() {
             // XXX Write me, user status has changed
             viewModel.setCurrentAuthUser(it)
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp()
+                || super.onSupportNavigateUp()
     }
 }
