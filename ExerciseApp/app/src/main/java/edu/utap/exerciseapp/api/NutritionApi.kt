@@ -17,33 +17,20 @@ import java.lang.reflect.Type
 
 
 interface NutritionApi {
-    // XXX Write me, two function prototypes with Retrofit annotations
-    // @GET contains a string appended to the base URL
-    // the string is called a path name
-    // You can add a parameter to the path name like this
-     @GET("/r/{subreddit}/hot.json")
-     suspend fun getPosts(
-        @Path("subreddit") subreddit: String,
-        @Query("limit") limit : Int = 100) : ListingResponse
-    // The reddit api docs are here: https://www.reddit.com/dev/api/#GET_hot
-
-     @GET("/subreddits/popular.json")
-     suspend fun getSubs(
-         @Query("limit") limit : Int = 100
+     @GET("/fdc/v1/foods/search")
+     suspend fun getSearch(
+        @Query("api_key") api_key : String,
+        @Query("query") query : String
      ) : ListingResponse
+
 
 
     // NB: Everything below here is fine, no need to change it
 
     // https://www.reddit.com/dev/api/#listings
-    class ListingResponse(val data: ListingData)
+    class ListingResponse(val data: NutritionResponse)
 
-    class ListingData(
-        val children: List<RedditChildrenResponse>,
-        val after: String?,
-        val before: String?
-    )
-    data class RedditChildrenResponse(val data: Nutrition)
+    data class NutritionResponse(val data: Nutrition)
 
     // This class allows Retrofit to parse items in our model of type
     // SpannableString.  Note, given the amount of "work" we do to
@@ -71,7 +58,7 @@ interface NutritionApi {
         //private const val BASE_URL = "https://www.reddit.com/"
         var httpurl = HttpUrl.Builder()
             .scheme("https")
-            .host("www.reddit.com")
+            .host("www.api.nal.usda.gov")
             .build()
         fun create(): NutritionApi = create(httpurl)
         private fun create(httpUrl: HttpUrl): NutritionApi {
