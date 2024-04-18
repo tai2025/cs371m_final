@@ -32,7 +32,7 @@ import java.time.LocalDate
 // So you can copy the old list, change it into a new list, then submit the new list.
 //
 // You can call adapterPosition to get the index of the selected item
-class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: Context) : RecyclerView.Adapter<ProgramAdapter.VH>() {
+class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: Context, val date: LocalDate) : RecyclerView.Adapter<ProgramAdapter.VH>() {
     var list = workoutlist
 
 
@@ -51,7 +51,8 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
         val binding = holder.rowBinding
         val table = binding.workoutTable
         Log.d("date", "local date is ${LocalDate.now()}")
-        binding.date.setText("${LocalDate.now()}")
+        binding.date.setText("${workout.getLocalDate()}")
+        table.findViewById<TextView>(R.id.tableEntryNum).setText("$position")
         if (table.childCount > 3) {
             table.removeViews(3, table.childCount - 3)
         }

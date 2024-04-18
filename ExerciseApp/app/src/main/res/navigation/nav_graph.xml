@@ -3,9 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
-
     <fragment
         android:id="@+id/homeFragment"
         android:name="edu.utap.exerciseapp.view.HomeFragment"
-        android:label="Photo list" />
+        android:label="Home" >
+
+        <action
+            android:id="@+id/action_home_to_cal"
+            app:destination="@id/calendarFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/calendarFragment"
+        android:name="edu.utap.exerciseapp.program.CalendarFragment"
+        android:label="Calendar View">
+        <action
+            android:id="@+id/action_calFragment_to_Program"
+            app:destination="@id/programFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/programFragment"
+        android:name="edu.utap.exerciseapp.program.ProgramFragment"
+        android:label="Program"
+        >
+        <argument
+            android:name="date"
+            app:argType="string"/>
+    </fragment>
 </navigation>
+
