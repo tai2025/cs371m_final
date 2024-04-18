@@ -13,9 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import edu.utap.exerciseapp.MainViewModel
 import edu.utap.exerciseapp.R
 import edu.utap.exerciseapp.databinding.RowBinding
 import edu.utap.exerciseapp.model.WorkoutEntry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import java.time.LocalDate
 
@@ -32,12 +36,13 @@ import java.time.LocalDate
 // So you can copy the old list, change it into a new list, then submit the new list.
 //
 // You can call adapterPosition to get the index of the selected item
-class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: Context, val date: LocalDate) : RecyclerView.Adapter<ProgramAdapter.VH>() {
+class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: Context, viewModel: MainViewModel) : RecyclerView.Adapter<ProgramAdapter.VH>() {
     var list = workoutlist
 
 
     var db = FirebaseFirestore.getInstance()
     var currentUser = FirebaseAuth.getInstance().currentUser
+    val vm = viewModel
     override fun getItemCount() = list.size
 
     inner class VH(val rowBinding : RowBinding)
@@ -90,22 +95,25 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     workoutentry.list.add(ex)
                     Log.d("adding to workoutentry", "adding")
                 }
+                vm.addToProgList(workoutentry)
                 // if currentuser is not null send to firestore
-                if (currentUser != null) {
-                    Log.d("Firestore", "Adding workouts to db")
-                    val uid = currentUser!!.uid
-                    // convert to map
-                    val docData: MutableMap<String, Any> = HashMap()
-                    docData["entries"] = list
-                    db.collection("users").document(uid).collection("workouts")
-                        .document("WorkoutList").set(docData, SetOptions.merge())
-                        .addOnSuccessListener {
-                            Log.d("Firestore", "Success")
-                        }
-                        .addOnFailureListener{
-                            Log.d("Firestore", "Error uploading workouts")
-                        }
-                }
+//                if (currentUser != null) {
+//                    Log.d("Firestore", "Adding workouts to db")
+//                    val uid = currentUser!!.uid
+//                    // convert to map
+//                    val docData: MutableMap<String, Any> = HashMap()
+//                    docData["entries"] = list
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        db.collection("users").document(uid).collection("workouts")
+//                            .document("WorkoutList").set(docData, SetOptions.merge())
+//                            .addOnSuccessListener {
+//                                Log.d("Firestore", "Success")
+//                            }
+//                            .addOnFailureListener {
+//                                Log.d("Firestore", "Error uploading workouts")
+//                            }
+//                    }
+//                }
 
             }
 
@@ -138,19 +146,9 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     workoutentry.list.add(ex)
                     Log.d("adding to workoutentry", "adding")
                 }
-                if (currentUser != null)
-                    Log.d("Firestore", "Adding workouts to db")
-                val uid = currentUser!!.uid
-                val docData: MutableMap<String, Any> = HashMap()
-                docData["entries"] = list
-                db.collection("users").document(uid).collection("workouts")
-                    .document("WorkoutList").set(docData, SetOptions.merge())
-                    .addOnSuccessListener {
-                        Log.d("Firestore", "Success")
-                    }
-                    .addOnFailureListener{
-                        Log.d("Firestore", "Error uploading workouts")
-                    }
+                vm.addToProgList(workoutentry)
+                Log.d("lskdjflsk", "${vm.getProgList()}")
+
             }
 
         }

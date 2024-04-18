@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import edu.utap.exerciseapp.glide.Glide
 import edu.utap.exerciseapp.model.PhotoMeta
+import edu.utap.exerciseapp.model.UserModel
+import edu.utap.exerciseapp.model.WorkoutEntry
 import edu.utap.exerciseapp.view.TakePictureWrapper
 
 enum class SortColumn {
@@ -19,6 +21,48 @@ class MainViewModel : ViewModel() {
     // At that point our fragment can be destroyed, which means this has to be
     // remembered and restored.  Instead, we put it in the viewModel where we
     // know it will persist (and we can persist it)
+    private var curUser = MutableLiveData<UserModel>()
+    private var progList = MutableLiveData<List<WorkoutEntry>>()
+
+    private var queried = MutableLiveData<Boolean>(false)
+
+    fun setQueried(b : Boolean) {
+        queried.postValue(b)
+    }
+
+    fun isQueried() : LiveData<Boolean> {
+        return queried
+    }
+
+    fun setCurUser(u: UserModel) {
+        curUser.postValue(u)
+    }
+    fun observeCurUser() : LiveData<UserModel> {
+        return curUser
+    }
+    fun getCurUser() : LiveData<UserModel> {
+        return curUser
+    }
+
+    fun addToProgList(we : WorkoutEntry) {
+        val list = mutableListOf<WorkoutEntry>()
+        progList.value?.let { list.addAll(it.toList()) }
+        list.add(we)
+        progList.postValue(list.toList())
+    }
+
+    fun setProgList(list : List<WorkoutEntry>) {
+        progList.postValue(list)
+    }
+
+    fun getProgList(): List<WorkoutEntry> {
+        if (progList.value == null) {
+            return listOf<WorkoutEntry>()
+        }
+        return progList.value!!
+    }
+
+
     private var pictureUUID = ""
     // Only call this from TakePictureWrapper
     fun takePictureUUID(uuid: String) {

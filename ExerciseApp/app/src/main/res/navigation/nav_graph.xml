@@ -11,6 +11,12 @@
         <action
             android:id="@+id/action_home_to_cal"
             app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_home_to_coach"
+            app:destination="@id/coachFragment"/>
+        <action
+            android:id="@+id/action_home_to_set"
+            app:destination="@id/settingFragment"/>
     </fragment>
 
     <fragment
@@ -31,5 +37,17 @@
             android:name="date"
             app:argType="string"/>
     </fragment>
+    <fragment
+        android:id="@+id/coachFragment"
+        android:name="edu.utap.exerciseapp.coach.CoachFragment"
+        android:label="Coach Fragment">
+        <action
+            android:id="@+id/action_coachFragment_to_Program"
+            app:destination="@id/programFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="edu.utap.exerciseapp.SettingFragment"
+        android:label="Settings"/>
 </navigation>
 

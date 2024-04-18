@@ -6,15 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.toObject
+import edu.utap.exerciseapp.MainViewModel
 import edu.utap.exerciseapp.databinding.ProgramFragmentBinding
 import edu.utap.exerciseapp.model.EntryHolder
 import edu.utap.exerciseapp.model.WorkoutEntry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -34,6 +40,7 @@ class ProgramFragment: Fragment() {
     var currentUser = FirebaseAuth.getInstance().currentUser
 
     private val args: ProgramFragmentArgs by navArgs()
+    private val viewModel: MainViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,75 +61,23 @@ class ProgramFragment: Fragment() {
         binding.swipeRefreshLayout.setOnRefreshListener {
             binding.swipeRefreshLayout.isRefreshing = false
         }
-        var adapter = ProgramAdapter(list, requireContext().applicationContext, localdate)
 
-        if (currentUser != null) {
-            list.clear()
-            val uid = currentUser!!.uid
+        list = viewModel.getProgList().toMutableList()
+        Log.d("hi", "$list")
+        val adapterList = mutableListOf<WorkoutEntry>()
 
-            Log.d("date", "$localdate")
-
-            val timestamp = Timestamp(Date.from(localdate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-            db.collection("users").document(uid).collection("workouts").document("WorkoutList")
-
-                .get()
-                .addOnCompleteListener{
-                    if (it.isSuccessful) {
-                        val document = it.result
-                        if (document.exists()) {
-                            val values = document.data?.values
-                            if (values != null) {
-                                for (v in values) {
-                                    Log.d("val", "$v")
-                                    val l = v as ArrayList<Map<String, Any>>
-                                    for (m in l) {
-                                        val mdate: Map<String, Any> = m["localDate"] as Map<String, Any>
-
-                                        if (mdate["dayOfMonth"].toString().toInt() == localdate.dayOfMonth
-                                            && mdate["monthValue"].toString().toInt() == localdate.monthValue
-                                            && mdate["year"].toString().toInt() == localdate.year) {
-                                            val workout = WorkoutEntry()
-                                            workout.setEntryNum(m["entryNum"].toString().toInt())
-
-                                            var mm = "${mdate["monthValue"].toString()}"
-                                            if (mm.toInt() < 10) {
-                                                mm = "0$mm"
-                                            }
-                                            var dd = "${mdate["dayOfMonth"].toString()}"
-                                            if (dd.toInt() < 10) {
-                                                dd = "0$dd"
-                                            }
-                                            val dateformat = "${dd}/${mm}/${mdate["year"].toString()}"
-                                            Log.d("dateformat", "$dateformat")
-                                            workout.setLocalDate(dateformat)
-                                            val exlist = m["list"] as ArrayList<Map<String, Any>>
-
-                                            for (ex in exlist) {
-                                                val exercise = WorkoutEntry.Workout()
-                                                exercise.Exercise = ex["exercise"].toString()
-                                                exercise.Note = ex["note"].toString()
-                                                exercise.Set = ex["set"].toString()
-                                                exercise.RPE = ex["rpe"].toString()
-                                                exercise.Weight = ex["weight"].toString()
-                                                exercise.Rep = ex["rep"].toString()
-                                                workout.addToList(exercise)
-                                            }
-                                            list.add(workout)
-                                        }
-                                    }
-                                }
-                            }
-                            Log.d("list", "$list")
-                            adapter.list = list
-                            adapter.notifyDataSetChanged()
-
-                        }
-
-                    } else {
-                        Log.d("Error", "Error retrieving workout data")
-                    }
-                }
+        for (l in list) {
+            val ldate = l.getLocalDate()
+            if (ldate.dayOfMonth == localdate.dayOfMonth &&
+                ldate.monthValue == localdate.monthValue &&
+                ldate.year == localdate.year) {
+                adapterList.add(l)
+            }
         }
+
+        var adapter = ProgramAdapter(adapterList, requireContext().applicationContext, viewModel)
+
+
 
         Log.d("adapter", "${adapter.itemCount}")
         binding.recyclerView.adapter = adapter
@@ -131,7 +86,7 @@ class ProgramFragment: Fragment() {
             val workout = WorkoutEntry()
             workout.setEntryNum(list.size)
             workout.setLocalDate(date)
-            list.add(workout)
+            adapterList.add(workout)
             for (l in list) {
                 for (workout in l.list) {
                     Log.d("debugging", "${workout.Exercise}")
@@ -142,17 +97,26 @@ class ProgramFragment: Fragment() {
             adapter.notifyDataSetChanged()
         }
 
-//
-//        val calendarView = findViewById<MaterialCalendarView>(R.id.calendarView)
-//        calendarView.setOnDateChangedListener { _, date, _ ->
-//            // Handle week selection here
-//            // For simplicity, let's assume we navigate to WeekWorkoutsFragment directly
-//            val weekWorkoutsFragment = WeekWorkoutsFragment.newInstance(date.toString())
-//            supportFragmentManager.beginTransaction()
-//                .replace(R.id.fragment_container, weekWorkoutsFragment)
-//                .addToBackStack(null)
-//                .commit()
-//        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("what", "${viewModel.getProgList()}")
+        if (currentUser != null)
+            Log.d("Firestore", "Adding workouts to db")
+            val uid = currentUser!!.uid
+            val docData: MutableMap<String, Any> = HashMap()
+            docData["entries"] = viewModel.getProgList()
+            CoroutineScope(Dispatchers.IO).launch {
+                db.collection("users").document(uid).collection("workouts")
+                    .document("WorkoutList").set(docData, SetOptions.merge())
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Success")
+                    }
+                    .addOnFailureListener {
+                        Log.d("Firestore", "Error uploading workouts")
+                    }
+            }
     }
 
 

@@ -25,6 +25,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import edu.utap.exerciseapp.databinding.ActivityLoginBinding
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
+import edu.utap.exerciseapp.model.UserModel
 
 class LoginActivity : AppCompatActivity() {
     private var loginEmail: EditText? = null

@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">Photolist</string>
+    <string name="app_name">ExerciseApp</string>
+    <string-array name="roles">
+        <item>Client</item>
+        <item>Coach</item>
+    </string-array>
 </resources>
