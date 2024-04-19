@@ -7,7 +7,6 @@
         android:id="@+id/homeFragment"
         android:name="edu.utap.exerciseapp.view.HomeFragment"
         android:label="Home" >
-
         <action
             android:id="@+id/action_home_to_cal"
             app:destination="@id/calendarFragment"/>
@@ -17,6 +16,9 @@
         <action
             android:id="@+id/action_home_to_set"
             app:destination="@id/settingFragment"/>
+        <action
+            android:id="@+id/action_home_to_nut"
+            app:destination="@+id/nutritionFragment"/>
     </fragment>
 
     <fragment
@@ -37,9 +39,12 @@
             android:name="date"
             app:argType="string"/>
     </fragment>
-<!--    <fragment-->
-<!--        android:id="@+id/nutritionFragment"-->
-<!--        android:name="edu.utap.exerciseapp.view.NutriotionFragment"-->
+    <fragment
+        android:id="@+id/nutritionFragment"
+        android:name="edu.utap.exerciseapp.nutrition.NutritionFragment"
+        android:label="nutrition"
+        >
+    </fragment>
     <fragment
         android:id="@+id/coachFragment"
         android:name="edu.utap.exerciseapp.coach.CoachFragment"

@@ -34,11 +34,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
-class SecondFragment:Fragment(R.layout.home_page)
-
-class ThirdFragment:Fragment(R.layout.profile_page)
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -129,11 +124,6 @@ class MainActivity : AppCompatActivity() {
         gClient = GoogleSignIn.getClient(this, gOptions!!)
         initMenu()
 
-        val progFragment = ProgramFragment()
-        val thirdFragment = ThirdFragment()
-        val calFragment = CalendarFragment()
-        val setFragment = SettingFragment()
-
         // Set up our nav graph
         navController = findNavController(R.id.mainFrame)
         appBarConfiguration = AppBarConfiguration(navController.graph)
@@ -170,10 +160,9 @@ class MainActivity : AppCompatActivity() {
 //        }
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.nutrition -> setCurrentFragment(thirdFragment)
+                R.id.nutrition -> navController.safeNavigate(HomeFragmentDirections.actionHomeToNut())
                 R.id.programs -> navController.safeNavigate(HomeFragmentDirections.actionHomeToCal())
                 R.id.settings -> navController.safeNavigate(HomeFragmentDirections.actionHomeToSet())
-
             }
             true
         }
