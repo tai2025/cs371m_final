@@ -37,6 +37,9 @@
             android:name="date"
             app:argType="string"/>
     </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/nutritionFragment"-->
+<!--        android:name="edu.utap.exerciseapp.view.NutriotionFragment"-->
     <fragment
         android:id="@+id/coachFragment"
         android:name="edu.utap.exerciseapp.coach.CoachFragment"
