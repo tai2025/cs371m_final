@@ -1,6 +1,7 @@
 package edu.utap.exerciseapp.api
 
 import android.text.SpannableString
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import edu.utap.exerciseapp.MainActivity
@@ -15,7 +16,7 @@ class NutritionRepository(private val nutritionAPI: NutritionApi) {
     private fun unpackPosts(response: NutritionApi.ListingResponse): List<RetNut> {
         // XXX Write me.
         val list = mutableListOf<RetNut>()
-        response.data.data.foods.forEach {
+        response.data?.data?.foods?.forEach {
             val name = it.description
             val cat = it.foodCategory
             val protein = it.foodNutrients.first { it.nutrientId == 1003 }
@@ -31,6 +32,7 @@ class NutritionRepository(private val nutritionAPI: NutritionApi) {
     suspend fun getSearch(search_key: String): List<RetNut> {
         val response : NutritionApi.ListingResponse?
         response = nutritionAPI.getSearch(API_KEY, search_key)
+        Log.d("debug response", "${response.data}")
         return unpackPosts(response)
     }
 }
