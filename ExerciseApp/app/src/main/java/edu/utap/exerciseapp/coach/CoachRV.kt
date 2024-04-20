@@ -35,6 +35,7 @@ class CoachRV(val list: MutableList<String>): RecyclerView.Adapter<CoachRV.VH>()
             binding.client.text = c
         }
 
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoachRV.VH {
             val rowBinding = ClientRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return VH(rowBinding)

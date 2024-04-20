@@ -95,7 +95,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     workoutentry.list.add(ex)
                     Log.d("adding to workoutentry", "adding")
                 }
-                vm.addToProgList(workoutentry)
+                vm.replaceProgItem(workoutentry, workoutentry.getEntryNum())
                 // if currentuser is not null send to firestore
 //                if (currentUser != null) {
 //                    Log.d("Firestore", "Adding workouts to db")
@@ -146,7 +146,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     workoutentry.list.add(ex)
                     Log.d("adding to workoutentry", "adding")
                 }
-                vm.addToProgList(workoutentry)
+                vm.replaceProgItem(workoutentry, workoutentry.getEntryNum())
                 Log.d("lskdjflsk", "${vm.getProgList()}")
 
             }

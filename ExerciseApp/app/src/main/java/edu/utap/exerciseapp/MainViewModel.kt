@@ -1,5 +1,6 @@
 package edu.utap.exerciseapp
 
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,7 +23,7 @@ class MainViewModel : ViewModel() {
     // remembered and restored.  Instead, we put it in the viewModel where we
     // know it will persist (and we can persist it)
     private var curUser = MutableLiveData<UserModel>()
-    private var progList = MutableLiveData<List<WorkoutEntry>>()
+    private var progList = MutableLiveData<List<WorkoutEntry>>(emptyList())
 
     private var queried = MutableLiveData<Boolean>(false)
 
@@ -45,10 +46,14 @@ class MainViewModel : ViewModel() {
     }
 
     fun addToProgList(we : WorkoutEntry) {
-        val list = mutableListOf<WorkoutEntry>()
-        progList.value?.let { list.addAll(it.toList()) }
-        list.add(we)
-        progList.postValue(list.toList())
+        var list = progList.value?.toMutableList()
+        if (list != null) {
+            list.add(we)
+        }
+        if (list != null) {
+            progList.postValue(list.toList())
+        }
+
     }
 
     fun setProgList(list : List<WorkoutEntry>) {
@@ -60,6 +65,14 @@ class MainViewModel : ViewModel() {
             return listOf<WorkoutEntry>()
         }
         return progList.value!!
+    }
+
+    fun replaceProgItem(w: WorkoutEntry, i : Int) {
+        val list = mutableListOf<WorkoutEntry>()
+        progList.value?.let { list.addAll(it.toList()) }
+        list.removeAt(i)
+        list.add(i, w)
+        progList.postValue(list.toList())
     }
 
 

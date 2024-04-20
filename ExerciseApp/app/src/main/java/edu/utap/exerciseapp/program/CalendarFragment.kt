@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.CalendarView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import edu.utap.exerciseapp.databinding.CalendarProgramBinding
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.findNavController
@@ -45,9 +46,9 @@ class CalendarFragment: Fragment() {
         _binding = CalendarProgramBinding.bind(view)
 
         binding.calendarView.setOnDateChangeListener(CalendarView.OnDateChangeListener { view, year, month, dayOfMonth ->
-            var mm = "$month"
-            if (month < 10) {
-                mm = "0$month"
+            var mm = "${month + 1}"
+            if (month + 1 < 10) {
+                mm = "0$mm"
             }
             var dd = "$dayOfMonth"
             if (dayOfMonth < 10) {
@@ -76,6 +77,7 @@ class CalendarFragment: Fragment() {
                                 if (document.exists()) {
                                     val values = document.data?.values
                                     if (values != null) {
+                                        val plist = mutableListOf<WorkoutEntry>()
                                         for (v in values) {
                                             Log.d("val", "$v")
                                             val l = v as ArrayList<Map<String, Any>>
@@ -88,16 +90,17 @@ class CalendarFragment: Fragment() {
                                                     m["entryNum"].toString().toInt()
                                                 )
 
-                                                var mm = "${mdate["monthValue"].toString()}"
-                                                if (mm.toInt() < 10) {
-                                                    mm = "0$mm"
+                                                var dbm = "${mdate["monthValue"].toString()}"
+                                                if (dbm.toInt() < 10) {
+                                                    dbm = "0$dbm"
                                                 }
-                                                var dd = "${mdate["dayOfMonth"].toString()}"
-                                                if (dd.toInt() < 10) {
-                                                    dd = "0$dd"
+                                                var dbd = "${mdate["dayOfMonth"].toString()}"
+                                                if (dbd.toInt() < 10) {
+                                                    dbd = "0$dbd"
                                                 }
+                                                var dby = "${mdate["year"].toString()}"
                                                 val dateformat =
-                                                    "${dd}/${mm}/${mdate["year"].toString()}"
+                                                    "${dbd}/${dbm}/${dby}"
                                                 Log.d("dateformat", "$dateformat")
                                                 workout.setLocalDate(dateformat)
                                                 val exlist =
@@ -113,14 +116,18 @@ class CalendarFragment: Fragment() {
                                                     exercise.Rep = ex["rep"].toString()
                                                     workout.addToList(exercise)
                                                 }
-                                                viewModel.addToProgList(workout)
+                                                plist.add(workout)
+                                                Log.d("viewModel calfrag", "${viewModel.getProgList()}")
 
                                             }
                                         }
+                                        viewModel.setProgList(plist.toList())
                                     }
 //                                    Log.d("list", "$list")
 //                                    adapter.list = list
 //                                    adapter.notifyDataSetChanged()
+                                    val direction = CalendarFragmentDirections.actionCalFragmentToProgram("${dd}/${mm}/$year")
+                                    findNavController().navigate(direction)
 
                                 }
 
@@ -129,12 +136,14 @@ class CalendarFragment: Fragment() {
                             }
                         }
                 }
+            } else {
+                val direction = CalendarFragmentDirections.actionCalFragmentToProgram("${dd}/${mm}/$year")
+                findNavController().navigate(direction)
             }
 
 
 //
-            val direction = CalendarFragmentDirections.actionCalFragmentToProgram("${dd}/${mm}/$year")
-            findNavController().navigate(direction)
+
 
 
         })

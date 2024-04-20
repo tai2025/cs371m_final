@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Timestamp
@@ -68,6 +69,9 @@ class ProgramFragment: Fragment() {
 
         for (l in list) {
             val ldate = l.getLocalDate()
+            Log.d("localdate", "$ldate")
+            Log.d("localmonth", "list dom: ${ldate.dayOfMonth} calendar dom: ${localdate.dayOfMonth}")
+            Log.d("localmonth", "list month: ${ldate.monthValue} calendar month: ${localdate.monthValue}")
             if (ldate.dayOfMonth == localdate.dayOfMonth &&
                 ldate.monthValue == localdate.monthValue &&
                 ldate.year == localdate.year) {
@@ -86,6 +90,7 @@ class ProgramFragment: Fragment() {
             val workout = WorkoutEntry()
             workout.setEntryNum(list.size)
             workout.setLocalDate(date)
+            viewModel.addToProgList(workout)
             adapterList.add(workout)
             for (l in list) {
                 for (workout in l.list) {
@@ -102,14 +107,14 @@ class ProgramFragment: Fragment() {
     override fun onPause() {
         super.onPause()
         Log.d("what", "${viewModel.getProgList()}")
-        if (currentUser != null)
+        if (currentUser != null) {
             Log.d("Firestore", "Adding workouts to db")
             val uid = currentUser!!.uid
             val docData: MutableMap<String, Any> = HashMap()
             docData["entries"] = viewModel.getProgList()
             CoroutineScope(Dispatchers.IO).launch {
                 db.collection("users").document(uid).collection("workouts")
-                    .document("WorkoutList").set(docData, SetOptions.merge())
+                    .document("WorkoutList").set(docData)
                     .addOnSuccessListener {
                         Log.d("Firestore", "Success")
                     }
@@ -117,6 +122,7 @@ class ProgramFragment: Fragment() {
                         Log.d("Firestore", "Error uploading workouts")
                     }
             }
+        }
     }
 
 

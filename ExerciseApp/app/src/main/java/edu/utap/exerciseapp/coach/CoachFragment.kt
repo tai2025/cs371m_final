@@ -1,6 +1,7 @@
 package edu.utap.exerciseapp.coach
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,11 @@ import edu.utap.exerciseapp.model.WorkoutEntry
 import edu.utap.exerciseapp.program.ProgramAdapter
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.firestore.SetOptions
 import edu.utap.exerciseapp.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CoachFragment: Fragment() {
     private var _binding: CoachViewBinding? = null
@@ -37,8 +42,30 @@ class CoachFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = CoachViewBinding.bind(view)
-        var adapter = viewModel.getCurUser().value?.let { CoachRV(it.getClients()) }
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(binding.recyclerView.context)
+        val list = mutableListOf<String>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            currentUser?.let { it1 ->
+                db.collection("users").whereEqualTo("coach", currentUser!!.email)
+                    .get()
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Success user")
+                        val documents = it.documents
+                        for (d in documents) {
+                            Log.d("d", "$d")
+                            Log.d("test", "${d.data?.get("email")}")
+                            list.add(d.data?.get("email").toString())
+                            Log.d("list", "$list")
+                            var adapter = CoachRV(list)
+                            Log.d("list", "$list")
+                            binding.recyclerView.adapter = adapter
+                            binding.recyclerView.layoutManager = LinearLayoutManager(binding.recyclerView.context)
+                        }
+                    }
+                    .addOnFailureListener {
+                        Log.d("Firestore", "Error uploading user")
+                    }
+            }
+        }
     }
 }

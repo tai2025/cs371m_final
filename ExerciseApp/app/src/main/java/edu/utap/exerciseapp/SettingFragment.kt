@@ -39,38 +39,13 @@ class SettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("in settings", "settings")
         _binding = SettingFragBinding.bind(view)
         binding.setCoach.setOnClickListener {
             val u = viewModel.getCurUser().value as UserModel
             if (u != null) {
                 u.setCoach(binding.coachET.text.toString())
             }
-            CoroutineScope(Dispatchers.IO).launch {
-                db.collection("users")
-                    .whereEqualTo("email", binding.coachET.text.toString())
-                    .get()
-                    .addOnSuccessListener {
-                        val document = it.documents
-                        for (d in document) {
-                            Log.d("what", "${d.toString()}")
-                            val data = d.data
-                            Log.d("data", "$data")
-                            var clients = data?.get("clients")?.toString()
-                            if (clients != null) {
-                                clients = clients.substring(1, clients.length - 1)
-                            }
-                            val clist : MutableList<String> =
-                                clients?.split(",")?.toMutableList()!!
-                            clist.add(u.getEmail() )
-                            val update = hashMapOf("clients" to clist)
-                            Log.d("update", "$update")
-                            db.collection("users").document(d.toString()).set(update, SetOptions.merge())
-                                .addOnSuccessListener  {
-                                    Log.d("success", "lets goooo")
-                                }
-
-                        }
-                    }}
             CoroutineScope(Dispatchers.IO).launch {
                 currentUser?.let { it1 ->
                     db.collection("users").document(it1.uid)
