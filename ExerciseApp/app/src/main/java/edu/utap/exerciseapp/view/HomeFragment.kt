@@ -16,7 +16,7 @@ import edu.utap.exerciseapp.R
 import edu.utap.exerciseapp.databinding.FragmentHomeBinding
 
 class HomeFragment :
-    Fragment(R.layout.fragment_home) {
+    Fragment() {
     private val viewModel: MainViewModel by activityViewModels()
     // It is a real bummer that we must initialize a registerForActivityResult
     // here or in onViewCreated.  You CAN'T initialize it in an onClickListener

@@ -14,7 +14,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
@@ -159,10 +158,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.nutrition -> setCurrentFragment(thirdFragment)
+                R.id.nutrition -> navController.safeNavigate(HomeFragmentDirections.actionHomeToNut())
                 R.id.programs -> navController.safeNavigateProg()
                 R.id.settings -> navController.safeNavigateSet()
-
             }
             true
         }
@@ -223,12 +221,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun NavController.safeNavigate(direction: NavDirections) {
-
-        val fragmentManager: FragmentManager = supportFragmentManager
-        // Assuming that you're using a container to host fragments
-        val fragmentTag = fragmentManager.fragments.lastOrNull()?.tag
-        val f = fragmentManager.findFragmentByTag(fragmentTag)
-        Log.d("frag", "${f.toString()}")
         currentDestination?.
                 getAction(direction.actionId)?.
                 run{
