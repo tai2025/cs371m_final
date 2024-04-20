@@ -4,11 +4,16 @@ import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import edu.utap.exerciseapp.api.NutritionApi
+import edu.utap.exerciseapp.api.NutritionRepository
+import edu.utap.exerciseapp.api.RetNut
 import edu.utap.exerciseapp.glide.Glide
 import edu.utap.exerciseapp.model.PhotoMeta
 import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.model.WorkoutEntry
 import edu.utap.exerciseapp.view.TakePictureWrapper
+import kotlinx.coroutines.launch
 
 enum class SortColumn {
     TITLE,
@@ -25,6 +30,20 @@ class MainViewModel : ViewModel() {
     private var progList = MutableLiveData<List<WorkoutEntry>>()
 
     private var queried = MutableLiveData<Boolean>(false)
+
+    private var nutAPI = NutritionApi.create()
+    private var nutRepo = NutritionRepository(nutAPI)
+    private var foods = MutableLiveData<List<RetNut>>()
+
+    fun searchFood(search : String){
+        viewModelScope.launch {
+            foods.postValue(nutRepo.getSearch(search))
+        }
+    }
+
+    fun observeFoods(): MutableLiveData<List<RetNut>> {
+        return foods
+    }
 
     fun setQueried(b : Boolean) {
         queried.postValue(b)

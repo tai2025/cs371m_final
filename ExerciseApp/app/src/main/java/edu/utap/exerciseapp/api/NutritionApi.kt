@@ -58,7 +58,7 @@ interface NutritionApi {
         //private const val BASE_URL = "https://www.reddit.com/"
         var httpurl = HttpUrl.Builder()
             .scheme("https")
-            .host("www.api.nal.usda.gov")
+            .host("api.nal.usda.gov")
             .build()
         fun create(): NutritionApi = create(httpurl)
         private fun create(httpUrl: HttpUrl): NutritionApi {
