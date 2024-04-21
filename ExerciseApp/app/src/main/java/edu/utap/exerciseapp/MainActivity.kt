@@ -25,14 +25,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import edu.utap.exerciseapp.coach.CoachFragmentDirections
 import edu.utap.exerciseapp.databinding.ActivityMainBinding
 import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.program.CalendarFragment
+import edu.utap.exerciseapp.program.CalendarFragmentDirections
 import edu.utap.exerciseapp.program.ProgramFragment
+import edu.utap.exerciseapp.program.ProgramFragmentDirections
 import edu.utap.exerciseapp.view.HomeFragmentDirections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.activity.viewModels
+
+
+class SecondFragment:Fragment(R.layout.home_page)
+
+class ThirdFragment:Fragment(R.layout.profile_page)
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -40,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var authUser : AuthUser
     private val viewModel: MainViewModel by viewModels()
+
 
 
     var userName: TextView? = null
@@ -70,21 +80,7 @@ class MainActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.menuLogout -> {
-                        if (currentUser != null)
-                            Log.d("Firestore", "Adding workouts to db")
-                        val uid = currentUser!!.uid
-                        val docData: MutableMap<String, Any> = HashMap()
-                        docData["entries"] = viewModel.getProgList()
-                        CoroutineScope(Dispatchers.IO).launch {
-                            db.collection("users").document(uid).collection("workouts")
-                                .document("WorkoutList").set(docData, SetOptions.merge())
-                                .addOnSuccessListener {
-                                    Log.d("Firestore", "Success")
-                                }
-                                .addOnFailureListener {
-                                    Log.d("Firestore", "Error uploading workouts")
-                                }
-                        }
+
                         gClient!!.signOut().addOnCompleteListener {
                            if (it.isSuccessful) {
 
@@ -123,48 +119,108 @@ class MainActivity : AppCompatActivity() {
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gClient = GoogleSignIn.getClient(this, gOptions!!)
         initMenu()
+        currentUser?.let { viewModel.setUid(it.uid) }
+
+        val progFragment = ProgramFragment()
+        val thirdFragment = ThirdFragment()
+        val calFragment = CalendarFragment()
+        val setFragment = SettingFragment()
 
         // Set up our nav graph
         navController = findNavController(R.id.mainFrame)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-//
-//        currentUser?.let {
-//            CoroutineScope(Dispatchers.IO).launch {
-//                db.collection("users").document(it.uid)
-//
-//                    .get()
-//                    .addOnCompleteListener {
-//                        val u = it.result.data as Map<String, Any>
-//                        val value = u.values
-//                        Log.d("val", "=$value")
-//
-//                        if (value.isNotEmpty()) {
-//                            val um = UserModel()
-//                            val cstring = u["clients"].toString()
-//                            val list = cstring.substring(1, cstring.length - 1).split(",")
-//                            um.setClients(list.toMutableList())
-//                            um.setRole(u["role"].toString())
-//                            um.setEmail(u["email"].toString())
-//                            Log.d("role", "${um.getRole()}")
-//                            viewModel.setCurUser(um)
-//                            if (um.getRole().equals("Coach")) {
-//                                navController.safeNavigate(HomeFragmentDirections.actionHomeToCoach())
-//                            }
-//                        }
-//
-//                        // No need to override onSupportNavigateUp(), because no up navigation
-//
-//                    }
-//            }
-//        }
+
+        currentUser?.let {
+            CoroutineScope(Dispatchers.IO).launch {
+                db.collection("users").document(it.uid)
+
+                    .get()
+                    .addOnCompleteListener {
+                        if (it.result.data != null) {
+                            val u = it.result.data as Map<String, Any>
+                            val value = u.values
+                            Log.d("val", "=$value")
+
+                            if (value.isNotEmpty()) {
+                                val um = UserModel()
+                                val cstring = u["clients"].toString()
+                                val list = cstring.substring(1, cstring.length - 1).split(",")
+                                um.setClients(list.toMutableList())
+                                um.setRole(u["role"].toString())
+                                um.setEmail(u["email"].toString())
+                                Log.d("role", "${um.getRole()}")
+                                viewModel.setCurUser(um)
+                                if (um.getRole().equals("Coach")) {
+                                    navController.safeNavigate(HomeFragmentDirections.actionHomeToCoach())
+                                }
+                            }
+                        }
+
+                    }
+            }
+        }
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.nutrition -> navController.safeNavigate(HomeFragmentDirections.actionHomeToNut())
-                R.id.programs -> navController.safeNavigate(HomeFragmentDirections.actionHomeToCal())
-                R.id.settings -> navController.safeNavigate(HomeFragmentDirections.actionHomeToSet())
+                R.id.programs -> navController.safeNavigateProg()
+                R.id.settings -> navController.safeNavigateSet()
             }
             true
+        }
+    }
+
+    private fun NavController.safeNavigateProg() {
+        var direction = HomeFragmentDirections.actionHomeToCal()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction = ProgramFragmentDirections.actionProgFragmentToCal()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction =SettingFragmentDirections.actionSettingFragmentToCalendar()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction = CoachFragmentDirections.actionCoachFragmentToCalendar()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+    }
+
+    private fun NavController.safeNavigateSet() {
+        var direction = HomeFragmentDirections.actionHomeToSet()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction = ProgramFragmentDirections.actionProgFragmentToSettings()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction =CalendarFragmentDirections.actionCalFragmentToSettings()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction = CoachFragmentDirections.actionCoachFragmentToSettings()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
         }
     }
 

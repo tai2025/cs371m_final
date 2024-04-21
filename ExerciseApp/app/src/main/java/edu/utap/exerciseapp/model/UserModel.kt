@@ -6,6 +6,14 @@ class UserModel {
     private var coach: String? = null
     private var clients: MutableList<String> = mutableListOf<String>()
 
+    private var uid: String = ""
+
+    fun setUID(u: String) {
+        uid = u
+    }
+    fun getUID(): String{
+        return uid
+    }
     fun addClient(s : String) {
         clients.add(s)
     }
