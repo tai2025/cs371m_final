@@ -8,6 +8,7 @@ import com.google.gson.JsonElement
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -21,16 +22,8 @@ interface NutritionApi {
      suspend fun getSearch(
         @Query("api_key") api_key : String,
         @Query("query") query : String
-     ) : ListingResponse
+     ) : Call<Nutrition>
 
-
-
-    // NB: Everything below here is fine, no need to change it
-
-    // https://www.reddit.com/dev/api/#listings
-    class ListingResponse(val data: NutritionResponse)
-
-    data class NutritionResponse(val data: Nutrition)
 
     // This class allows Retrofit to parse items in our model of type
     // SpannableString.  Note, given the amount of "work" we do to
