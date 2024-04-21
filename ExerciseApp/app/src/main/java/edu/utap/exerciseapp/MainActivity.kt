@@ -39,10 +39,6 @@ import kotlinx.coroutines.launch
 import androidx.activity.viewModels
 
 
-class SecondFragment:Fragment(R.layout.home_page)
-
-class ThirdFragment:Fragment(R.layout.profile_page)
-
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -120,11 +116,6 @@ class MainActivity : AppCompatActivity() {
         gClient = GoogleSignIn.getClient(this, gOptions!!)
         initMenu()
         currentUser?.let { viewModel.setUid(it.uid) }
-
-        val progFragment = ProgramFragment()
-        val thirdFragment = ThirdFragment()
-        val calFragment = CalendarFragment()
-        val setFragment = SettingFragment()
 
         // Set up our nav graph
         navController = findNavController(R.id.mainFrame)

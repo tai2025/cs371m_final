@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_calFragment_to_Program"
             app:destination="@id/programFragment"/>
+        <action
+            android:id="@+id/action_calFragment_to_Settings"
+            app:destination="@id/settingFragment"/>
     </fragment>
 
     <fragment
@@ -35,6 +38,12 @@
         android:name="edu.utap.exerciseapp.program.ProgramFragment"
         android:label="Program"
         >
+        <action
+            android:id="@+id/action_progFragment_to_Settings"
+            app:destination="@id/settingFragment"/>
+        <action
+            android:id="@+id/action_progFragment_to_Cal"
+            app:destination="@id/calendarFragment"/>
         <argument
             android:name="date"
             app:argType="string"/>
@@ -50,12 +59,19 @@
         android:name="edu.utap.exerciseapp.coach.CoachFragment"
         android:label="Coach Fragment">
         <action
-            android:id="@+id/action_coachFragment_to_Program"
-            app:destination="@id/programFragment"/>
+            android:id="@+id/action_coachFragment_to_Calendar"
+            app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_coachFragment_to_Settings"
+            app:destination="@id/settingFragment"/>
     </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="edu.utap.exerciseapp.SettingFragment"
-        android:label="Settings"/>
-</navigation>
+        android:label="Settings">
 
+        <action
+            android:id="@+id/action_settingFragment_to_Calendar"
+            app:destination="@id/calendarFragment"/>
+    </fragment>
+</navigation>

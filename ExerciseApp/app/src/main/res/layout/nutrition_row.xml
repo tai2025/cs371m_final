@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -24,11 +23,21 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/foodComp"
+            app:layout_constraintTop_toBottomOf="@id/food"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="company"
+            android:textSize="15sp"
+            android:layout_margin="8dp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/cal_place"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toStartOf="parent"
             android:text="Calories: "
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:layout_margin="8dp"
             />
@@ -37,10 +46,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cals"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@id/cal_place"
             android:text="0"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_margin="8dp"
             />
 
@@ -48,10 +57,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/carb_place"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@+id/cals"
             android:text="Carbs: "
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:layout_margin="8dp"
             />
@@ -60,10 +69,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/carbs"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@id/carb_place"
             android:text="0"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_margin="8dp"
             />
 
@@ -71,10 +80,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fats_place"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@id/carbs"
             android:text="Fats: "
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:layout_margin="8dp"
             />
@@ -83,10 +92,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fats"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@id/fats_place"
             android:text="0"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_margin="8dp"
             />
 
@@ -94,10 +103,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/proteins_place"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@id/fats"
             android:text="Protein: "
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:layout_margin="8dp"
             />
@@ -106,10 +115,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/proteins"
-            app:layout_constraintTop_toBottomOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/foodComp"
             app:layout_constraintStart_toEndOf="@id/proteins_place"
             android:text="0"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:layout_margin="8dp"
             />
 
@@ -121,7 +130,6 @@
             android:layout_weight="1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             android:src="@drawable/ic_favorite_border_black_24dp"/>
 
 

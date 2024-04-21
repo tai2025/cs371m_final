@@ -1,10 +1,12 @@
 package edu.utap.exerciseapp
 
+import android.util.Log
 import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import edu.utap.exerciseapp.api.Nutrition
 import edu.utap.exerciseapp.api.NutritionApi
 import edu.utap.exerciseapp.api.NutritionRepository
 import edu.utap.exerciseapp.api.RetNut
@@ -14,6 +16,9 @@ import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.model.WorkoutEntry
 import edu.utap.exerciseapp.view.TakePictureWrapper
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 enum class SortColumn {
     TITLE,
@@ -35,6 +40,7 @@ class MainViewModel : ViewModel() {
     private var nutRepo = NutritionRepository(nutAPI)
     private var foods = MutableLiveData<List<RetNut>>()
     private var uid = MutableLiveData<String>()
+    private var favFoods = MutableLiveData<MutableList<RetNut>>(emptyList<RetNut>().toMutableList())
 
     fun setUid(u : String) {
         viewModelScope.launch {
@@ -46,9 +52,50 @@ class MainViewModel : ViewModel() {
         return uid
     }
 
+    fun observeFavFoods(): MutableLiveData<MutableList<RetNut>> {
+        return favFoods
+    }
+
+    fun addFav(newFav: RetNut) {
+        favFoods.value!!.add(newFav)
+    }
+
+    fun removeFav(remove: RetNut) {
+        favFoods.value!!.remove(remove)
+    }
+
     fun searchFood(search : String){
         viewModelScope.launch {
-            foods.postValue(nutRepo.getSearch(search))
+            nutRepo.getFoods(search, object :
+                Callback<Nutrition> {
+                override fun onFailure(call: Call<Nutrition>, t: Throwable) { Log.d("-------", "Error fetching foods", t) }
+                override fun onResponse(call: Call<Nutrition>,
+                                        response: Response<Nutrition>
+                ) {
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            Log.d("-------", "foods: $it")
+                            val list = mutableListOf<RetNut>()
+                            it.foods.forEach {food ->
+                                val name = food.description
+                                val cat = food.foodCategory
+                                val company = food.brandOwner
+                                val protein: Double = food.foodNutrients.firstOrNull  {id ->
+                                    id.nutrientId == 1003 }?.value ?: -1.0
+                                val fat: Double = food.foodNutrients.firstOrNull  {id ->
+                                    id.nutrientId == 1004 }?.value ?: -1.0
+                                val carb: Double = food.foodNutrients.firstOrNull  { id ->
+                                    id.nutrientId == 1005 }?.value ?: -1.0
+                                val cal: Double = food.foodNutrients.firstOrNull  { id ->
+                                    id.nutrientId == 1008 }?.value ?: -1.0
+                                list.add(RetNut(name, company, cat, protein, fat, carb, cal))
+                            }
+                            foods.postValue(list)
+                            Log.d("-------", "$list")
+                        }
+                    } else Log.e("-------", "Failed to fetch foods: ${response.errorBody()?.string()}")
+                }
+            })
         }
     }
 

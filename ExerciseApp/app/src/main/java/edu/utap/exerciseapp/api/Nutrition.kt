@@ -4,13 +4,13 @@ import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import androidx.core.text.clearSpans
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 
 data class RetNut(
     val name: String,
+    val company: String?,
     val cat: String,
     val protein: Double,
     val fat: Double,

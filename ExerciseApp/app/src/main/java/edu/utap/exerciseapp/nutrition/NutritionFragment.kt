@@ -34,11 +34,18 @@ class NutritionFragment: Fragment() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
     }
+
+    private fun initSwipeLayout(swipe : SwipeRefreshLayout) {
+        swipe.setOnRefreshListener {
+            swipe.isRefreshing = false
+        }
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = NutritionPageBinding.inflate(inflater, container, false)
         return binding.root
@@ -47,6 +54,7 @@ class NutritionFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAdapter(binding)
+        initSwipeLayout(binding.swipeRefreshLayout)
         binding.searchButton.setOnClickListener {
             viewModel.searchFood(binding.searchBar.text.toString())
         }

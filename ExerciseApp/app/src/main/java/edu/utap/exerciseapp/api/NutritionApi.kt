@@ -19,7 +19,7 @@ import java.lang.reflect.Type
 
 interface NutritionApi {
      @GET("/fdc/v1/foods/search")
-     suspend fun getSearch(
+     fun getSearch(
         @Query("api_key") api_key : String,
         @Query("query") query : String
      ) : Call<Nutrition>
