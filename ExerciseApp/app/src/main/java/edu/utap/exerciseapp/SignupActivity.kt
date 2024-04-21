@@ -76,20 +76,25 @@ class SignupActivity : AppCompatActivity() {
                         ).show()
                         val userModel = UserModel()
                         userModel.setEmail(user)
+
+                        var currentUser = FirebaseAuth.getInstance().currentUser
+                        if (currentUser != null) {
+                            userModel.setUID(currentUser.uid)
+                        }
                         Log.d("selectedItem", "${spinner.selectedItem.toString()}")
                         userModel.setRole(spinner.selectedItem.toString())
                         viewModel.setCurUser(userModel)
-//                        task.result.user?.let { it1 ->
-//                            CoroutineScope(Dispatchers.IO).launch {
-//                                db.collection("users").document(it1.uid).set(userModel, SetOptions.merge())
-//                                    .addOnSuccessListener {
-//                                        Log.d("Firestore", "Success user")
-//                                    }
-//                                    .addOnFailureListener{
-//                                        Log.d("Firestore", "Error uploading user")
-//                                    }
-//                            }
-//                        }
+                        task.result.user?.let { it1 ->
+                            CoroutineScope(Dispatchers.IO).launch {
+                                db.collection("users").document(it1.uid).set(userModel, SetOptions.merge())
+                                    .addOnSuccessListener {
+                                        Log.d("Firestore", "Success user")
+                                    }
+                                    .addOnFailureListener{
+                                        Log.d("Firestore", "Error uploading user")
+                                    }
+                            }
+                        }
 
                         startActivity(Intent(this@SignupActivity, LoginActivity::class.java))
                     } else {

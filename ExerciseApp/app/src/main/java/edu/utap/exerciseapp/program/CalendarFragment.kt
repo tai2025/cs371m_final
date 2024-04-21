@@ -59,10 +59,10 @@ class CalendarFragment: Fragment() {
             val formatter = DateTimeFormatter.ofPattern("dd/MM/yyy")
             val localdate: LocalDate = LocalDate.parse(date, formatter)
 
-
-            if (currentUser != null && viewModel.isQueried().value == false) {
+            Log.d("cal", "${viewModel.getUID().value}")
+            if (viewModel.getUID().value != null && viewModel.isQueried().value == false) {
                 viewModel.setQueried(true)
-                val uid = currentUser!!.uid
+                val uid = viewModel.getUID().value!!
 
                 Log.d("date", "$localdate")
 

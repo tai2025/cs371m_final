@@ -36,6 +36,7 @@ import edu.utap.exerciseapp.view.HomeFragmentDirections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import androidx.activity.viewModels
 
 
 class SecondFragment:Fragment(R.layout.home_page)
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var authUser : AuthUser
     private val viewModel: MainViewModel by viewModels()
+
 
 
     var userName: TextView? = null
@@ -117,6 +119,7 @@ class MainActivity : AppCompatActivity() {
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build()
         gClient = GoogleSignIn.getClient(this, gOptions!!)
         initMenu()
+        currentUser?.let { viewModel.setUid(it.uid) }
 
         val progFragment = ProgramFragment()
         val thirdFragment = ThirdFragment()
@@ -134,24 +137,25 @@ class MainActivity : AppCompatActivity() {
 
                     .get()
                     .addOnCompleteListener {
-                        val u = it.result.data as Map<String, Any>
-                        val value = u.values
-                        Log.d("val", "=$value")
+                        if (it.result.data != null) {
+                            val u = it.result.data as Map<String, Any>
+                            val value = u.values
+                            Log.d("val", "=$value")
 
-                        if (value.isNotEmpty()) {
-                            val um = UserModel()
-                            val cstring = u["clients"].toString()
-                            val list = cstring.substring(1, cstring.length - 1).split(",")
-                            um.setClients(list.toMutableList())
-                            um.setRole(u["role"].toString())
-                            um.setEmail(u["email"].toString())
-                            Log.d("role", "${um.getRole()}")
-                            viewModel.setCurUser(um)
-                            if (um.getRole().equals("Coach")) {
-                                navController.safeNavigate(HomeFragmentDirections.actionHomeToCoach())
+                            if (value.isNotEmpty()) {
+                                val um = UserModel()
+                                val cstring = u["clients"].toString()
+                                val list = cstring.substring(1, cstring.length - 1).split(",")
+                                um.setClients(list.toMutableList())
+                                um.setRole(u["role"].toString())
+                                um.setEmail(u["email"].toString())
+                                Log.d("role", "${um.getRole()}")
+                                viewModel.setCurUser(um)
+                                if (um.getRole().equals("Coach")) {
+                                    navController.safeNavigate(HomeFragmentDirections.actionHomeToCoach())
+                                }
                             }
                         }
-
 
                     }
             }

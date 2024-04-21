@@ -35,6 +35,17 @@ class MainViewModel : ViewModel() {
     private var nutAPI = NutritionApi.create()
     private var nutRepo = NutritionRepository(nutAPI)
     private var foods = MutableLiveData<List<RetNut>>()
+    private var uid = MutableLiveData<String>()
+
+    fun setUid(u : String) {
+        viewModelScope.launch {
+            uid.setValue(u)
+        }
+    }
+
+    fun getUID(): MutableLiveData<String> {
+        return uid
+    }
 
     fun searchFood(search : String){
         viewModelScope.launch {

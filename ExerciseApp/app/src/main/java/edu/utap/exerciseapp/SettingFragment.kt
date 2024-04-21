@@ -45,11 +45,14 @@ class SettingFragment : Fragment() {
             val u = viewModel.getCurUser().value as UserModel
             if (u != null) {
                 u.setCoach(binding.coachET.text.toString())
+                Log.d("whatsettings", "${currentUser?.uid!!}")
+                u.setUID(currentUser?.uid!!)
             }
+            Log.d("uidsettings", "${u.getUID()}")
             CoroutineScope(Dispatchers.IO).launch {
                 currentUser?.let { it1 ->
                     db.collection("users").document(it1.uid)
-                        .set(u, SetOptions.merge())
+                        .set(u)
                         .addOnSuccessListener {
                             Log.d("Firestore", "Success user")
                         }

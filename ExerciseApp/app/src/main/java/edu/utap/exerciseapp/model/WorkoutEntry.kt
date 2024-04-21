@@ -11,8 +11,11 @@ class WorkoutEntry() {
     private var entryNum: Int = 0
 
     private var localDate: LocalDate = LocalDate.MIN
+
     fun WorkoutEntry(){
     }
+
+
     fun setLocalDate(date: String) {
         localDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyy"))
     }
