@@ -35,10 +35,10 @@ class TotalNutritionFragment : Fragment() {
                 totalFat += ret.fat
                 totalCarb += ret.carb
             }
-            binding.totalProtein.text = totalProtein.toString()
-            binding.totalCals.text = totalCal.toString()
-            binding.totalCarb.text = totalCarb.toString()
-            binding.totalFat.text = totalFat.toString()
+            binding.totalProtein.text = String.format("%.2f", totalProtein)
+            binding.totalCals.text = String.format("%.2f", totalCal)
+            binding.totalCarb.text = String.format("%.2f", totalCarb)
+            binding.totalFat.text = String.format("%.2f", totalFat)
             adapter.replaceList(it)
             adapter.notifyDataSetChanged()
         }
