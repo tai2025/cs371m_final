@@ -66,7 +66,6 @@ class CoachFragment: Fragment() {
 //                            list.add(d.key.toString())
                             Log.d("list", "$list")
                         }
-                        list.removeAt(0)
                         var adapter = CoachRV(list, viewModel) {
                             viewModel.setUid(it)
                             Log.d("uidcoachfrag", "${viewModel.getUID().value}")

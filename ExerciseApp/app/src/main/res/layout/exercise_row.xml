@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableRow xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
@@ -68,6 +69,13 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/saveBut"
                     android:text="save"/>
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/deleteBut"
+                    android:src="@drawable/trash"
+                    android:scaleType="fitCenter"
+                    />
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -78,6 +86,12 @@
                     android:layout_height="0dp"
                     android:visibility="invisible"
                     android:id="@+id/exerciseNum"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible"
+                    android:text="0"
+                    android:id="@+id/added"/>
 
             </LinearLayout>
         </HorizontalScrollView>

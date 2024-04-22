@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -95,7 +96,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     workoutentry.list.add(ex)
                     Log.d("adding to workoutentry", "adding")
                 }
-                vm.updateProgList(workout.getEntryNum(), workoutentry)
+                vm.updateProgList(workoutentry.getEntryNum(), workoutentry)
                 // if currentuser is not null send to firestore
 //                if (currentUser != null) {
 //                    Log.d("Firestore", "Adding workouts to db")
@@ -115,6 +116,15 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
 //                    }
 //                }
 
+            }
+            row.findViewById<ImageButton>(R.id.deleteBut).setOnClickListener {
+                val workoutentry = list.get((row.findViewById<TextView>(R.id.entryNum).text.toString()).toInt())
+                val exNum = row.findViewById<TextView>(R.id.exerciseNum).text.toString().toInt()
+                Log.d("tableview", "${table.getChildAt(exNum + 3)}")
+                table.removeViewAt(exNum + 3)
+                workoutentry.list.removeAt(exNum)
+                vm.updateProgList(workoutentry.getEntryNum(), workoutentry)
+                notifyDataSetChanged()
             }
 
 
@@ -146,9 +156,20 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                     workoutentry.list.add(ex)
                     Log.d("adding to workoutentry", "adding")
                 }
-                vm.updateProgList(workout.getEntryNum(), workoutentry)
+                vm.updateProgList(workoutentry.getEntryNum(), workoutentry)
+                row.findViewById<TextView>(R.id.added).text = "1"
                 Log.d("lskdjflsk", "${vm.getProgList()}")
 
+            }
+            row.findViewById<ImageButton>(R.id.deleteBut).setOnClickListener {
+                val workoutentry = list.get((row.findViewById<TextView>(R.id.entryNum).text.toString()).toInt())
+                val exNum = row.findViewById<TextView>(R.id.exerciseNum).text.toString().toInt()
+                table.removeViewAt(exNum + 3)
+                if (row.findViewById<TextView>(R.id.added).text.equals("1")) {
+                    workoutentry.list.removeAt(exNum)
+                    vm.updateProgList(workoutentry.getEntryNum(), workoutentry)
+                }
+                notifyDataSetChanged()
             }
 
         }
