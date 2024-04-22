@@ -37,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.activity.viewModels
+import edu.utap.exerciseapp.nutrition.NutritionFragmentDirections
 
 
 class MainActivity : AppCompatActivity() {
@@ -153,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         }
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
-                R.id.nutrition -> navController.safeNavigate(HomeFragmentDirections.actionHomeToNut())
+                R.id.nutrition -> navController.safeNavigateNut()
                 R.id.programs -> navController.safeNavigateProg()
                 R.id.settings -> navController.safeNavigateSet()
             }
@@ -180,7 +181,34 @@ class MainActivity : AppCompatActivity() {
         run{
             navigate(direction)
         }
+        direction =NutritionFragmentDirections.actionNutToCalendar()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
         direction = CoachFragmentDirections.actionCoachFragmentToCalendar()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+    }
+
+    private fun NavController.safeNavigateNut() {
+        var direction = HomeFragmentDirections.actionHomeToNut()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction = ProgramFragmentDirections.actionProgFragmentToNut()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction =SettingFragmentDirections.actionSettingFragmentToNut()
         currentDestination?.
         getAction(direction.actionId)?.
         run{
@@ -202,6 +230,12 @@ class MainActivity : AppCompatActivity() {
             navigate(direction)
         }
         direction =CalendarFragmentDirections.actionCalFragmentToSettings()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction =NutritionFragmentDirections.actionNutToSettings()
         currentDestination?.
         getAction(direction.actionId)?.
         run{

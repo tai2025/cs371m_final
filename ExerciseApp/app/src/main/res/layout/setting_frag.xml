@@ -2,7 +2,63 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/light_lavender">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Settings"
+        android:id="@+id/settings"
+        android:textSize="40sp"
+        android:layout_margin="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/curremail"
+        android:text="User email: "
+        android:paddingBottom="30dp"
+        android:paddingTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/settings"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="15dp"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/curremail"
+        android:text="None"
+        android:paddingBottom="30dp"
+        android:paddingTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/settings"
+        android:id="@+id/curremailTV"
+        android:textSize="23sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/currcoach"
+        android:text="Current Coach: "
+        android:paddingBottom="30dp"
+        app:layout_constraintTop_toBottomOf="@id/curremail"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="15dp"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/currcoach"
+        android:text="None"
+        android:paddingBottom="30dp"
+        app:layout_constraintTop_toBottomOf="@id/curremail"
+        android:id="@+id/currcoachTV"
+        android:textSize="23sp"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -10,12 +66,20 @@
         android:text="Set Coach"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/coachET"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="15dp"
+        app:cornerRadius = "20dp"
         />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="Enter coach email"
+        android:background="@drawable/custom_edittext"
+        android:padding="8dp"
         android:id="@+id/coachET"
-        app:layout_constraintBottom_toTopOf="@id/setCoach"/>
+        app:layout_constraintTop_toBottomOf="@id/currcoach"
+        app:layout_constraintBottom_toTopOf="@id/setCoach"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toStartOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

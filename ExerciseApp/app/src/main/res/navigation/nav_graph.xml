@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_calFragment_to_Settings"
             app:destination="@id/settingFragment"/>
+        <action
+            android:id="@+id/action_calFragment_to_Nut"
+            app:destination="@id/nutritionFragment"/>
     </fragment>
 
     <fragment
@@ -44,6 +47,9 @@
         <action
             android:id="@+id/action_progFragment_to_Cal"
             app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_progFragment_to_Nut"
+            app:destination="@id/nutritionFragment"/>
         <argument
             android:name="date"
             app:argType="string"/>
@@ -54,6 +60,15 @@
         android:name="edu.utap.exerciseapp.nutrition.TotalNutritionFragment"
         android:label="total_nutrition"
         >
+        <action
+            android:id="@+id/action_total_to_nut"
+            app:destination="@+id/nutritionFragment"/>
+        <action
+            android:id="@+id/action_nut_to_Calendar"
+            app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_nut_to_Settings"
+            app:destination="@id/settingFragment"/>
     </fragment>
 
     <fragment
@@ -63,6 +78,13 @@
         <action
             android:id="@+id/action_nut_to_total"
             app:destination="@+id/totalNutritionFragment"/>
+        <action
+            android:id="@+id/action_nut_to_Calendar"
+            app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_nut_to_Settings"
+            app:destination="@id/settingFragment"/>
+
     </fragment>
 
     <fragment
@@ -84,5 +106,8 @@
         <action
             android:id="@+id/action_settingFragment_to_Calendar"
             app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_settingFragment_to_Nut"
+            app:destination="@id/nutritionFragment"/>
     </fragment>
 </navigation>

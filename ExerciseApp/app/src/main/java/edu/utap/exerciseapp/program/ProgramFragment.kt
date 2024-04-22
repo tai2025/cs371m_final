@@ -102,7 +102,7 @@ class ProgramFragment: Fragment() {
     override fun onPause() {
         super.onPause()
         Log.d("what", "${viewModel.getProgList()}")
-        if (currentUser != null)
+        if (currentUser != null) {
             Log.d("Firestore", "Adding workouts to db")
             val uid = currentUser!!.uid
             val docData: MutableMap<String, Any> = HashMap()
@@ -117,6 +117,7 @@ class ProgramFragment: Fragment() {
                         Log.d("Firestore", "Error uploading workouts")
                     }
             }
+        }
     }
 
 

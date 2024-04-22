@@ -121,6 +121,8 @@ class CalendarFragment: Fragment() {
 //                                    Log.d("list", "$list")
 //                                    adapter.list = list
 //                                    adapter.notifyDataSetChanged()
+                                    val direction = CalendarFragmentDirections.actionCalFragmentToProgram("${dd}/${mm}/$year")
+                                    findNavController().navigate(direction)
 
                                 }
 
@@ -133,8 +135,7 @@ class CalendarFragment: Fragment() {
 
 
 //
-            val direction = CalendarFragmentDirections.actionCalFragmentToProgram("${dd}/${mm}/$year")
-            findNavController().navigate(direction)
+
 
 
         })

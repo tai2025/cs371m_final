@@ -125,7 +125,8 @@ class MainViewModel : ViewModel() {
         val list = mutableListOf<WorkoutEntry>()
         progList.value?.let { list.addAll(it.toList()) }
         list.add(we)
-        progList.postValue(list.toList())
+        progList.setValue(list.toList())
+        Log.d("proglistviewmodel", "${progList.value}")
     }
 
     fun setProgList(list : List<WorkoutEntry>) {

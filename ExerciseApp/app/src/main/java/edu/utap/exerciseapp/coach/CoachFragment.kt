@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.SetOptions
 import edu.utap.exerciseapp.MainViewModel
+import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.view.HomeFragmentDirections
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ class CoachFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = CoachViewBinding.bind(view)
-        val list = mutableListOf<String>()
+        val list = mutableListOf<UserModel>()
 
         CoroutineScope(Dispatchers.IO).launch {
             currentUser?.let { it1 ->
@@ -58,11 +59,14 @@ class CoachFragment: Fragment() {
                             Log.d("d", "$d")
                             Log.d("test", "${d.data?.get("email")}")
                             Log.d("lkj", "${d.data}")
-                            list.add(d.data?.get("uid").toString())
+                            val u = UserModel()
+                            u.setEmail(d.data?.get("email").toString())
+                            u.setUID(d.data?.get("uid").toString())
+                            list.add(u)
 //                            list.add(d.key.toString())
                             Log.d("list", "$list")
                         }
-
+                        list.removeAt(0)
                         var adapter = CoachRV(list, viewModel) {
                             viewModel.setUid(it)
                             Log.d("uidcoachfrag", "${viewModel.getUID().value}")
