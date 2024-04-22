@@ -104,7 +104,7 @@ class ProgramFragment: Fragment() {
         Log.d("what", "${viewModel.getProgList()}")
         if (currentUser != null) {
             Log.d("Firestore", "Adding workouts to db")
-            val uid = currentUser!!.uid
+            val uid = viewModel.getUID().value!!
             val docData: MutableMap<String, Any> = HashMap()
             docData["entries"] = viewModel.getProgList()
             CoroutineScope(Dispatchers.IO).launch {

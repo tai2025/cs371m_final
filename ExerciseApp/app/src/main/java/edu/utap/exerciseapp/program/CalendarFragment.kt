@@ -131,6 +131,9 @@ class CalendarFragment: Fragment() {
                             }
                         }
                 }
+            } else {
+                val direction = CalendarFragmentDirections.actionCalFragmentToProgram("${dd}/${mm}/$year")
+                findNavController().navigate(direction)
             }
 
 
