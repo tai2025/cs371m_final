@@ -85,6 +85,7 @@ class ProgramFragment: Fragment() {
         binding.AddBut.setOnClickListener{
             val workout = WorkoutEntry()
             workout.setEntryNum(list.size)
+            viewModel.addToProgList(workout)
             workout.setLocalDate(date)
             adapterList.add(workout)
             for (l in list) {

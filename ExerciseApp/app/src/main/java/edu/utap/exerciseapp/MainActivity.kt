@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.viewModels
@@ -141,9 +142,11 @@ class MainActivity : AppCompatActivity() {
                                 um.setClients(list.toMutableList())
                                 um.setRole(u["role"].toString())
                                 um.setEmail(u["email"].toString())
+                                um.setCoach(u["coach"].toString())
                                 Log.d("role", "${um.getRole()}")
                                 viewModel.setCurUser(um)
                                 if (um.getRole().equals("Coach")) {
+                                    binding.bottomNavigationView.visibility = View.GONE
                                     navController.safeNavigate(HomeFragmentDirections.actionHomeToCoach())
                                 }
                             }
@@ -203,6 +206,12 @@ class MainActivity : AppCompatActivity() {
             navigate(direction)
         }
         direction = ProgramFragmentDirections.actionProgFragmentToNut()
+        currentDestination?.
+        getAction(direction.actionId)?.
+        run{
+            navigate(direction)
+        }
+        direction = CalendarFragmentDirections.actionCalFragmentToNut()
         currentDestination?.
         getAction(direction.actionId)?.
         run{

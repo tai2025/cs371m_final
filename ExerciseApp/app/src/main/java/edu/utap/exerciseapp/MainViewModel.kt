@@ -56,6 +56,10 @@ class MainViewModel : ViewModel() {
         return favFoods
     }
 
+    fun emptyFoods(){
+        foods.postValue(emptyList())
+    }
+
     fun addFav(newFav: RetNut) {
         favFoods.value!!.add(newFav)
     }
@@ -127,6 +131,14 @@ class MainViewModel : ViewModel() {
         list.add(we)
         progList.setValue(list.toList())
         Log.d("proglistviewmodel", "${progList.value}")
+    }
+
+    fun updateProgList(i: Int, we: WorkoutEntry) {
+        val list = mutableListOf<WorkoutEntry>()
+        progList.value?.let { list.addAll(it.toList()) }
+        list.removeAt(i)
+        list.add(i, we)
+        progList.setValue(list.toList())
     }
 
     fun setProgList(list : List<WorkoutEntry>) {

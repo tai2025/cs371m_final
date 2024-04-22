@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 
 
 class NutritionFragment: Fragment() {
@@ -36,6 +37,7 @@ class NutritionFragment: Fragment() {
         }
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(activity)
+
     }
 
     private fun initSwipeLayout(swipe : SwipeRefreshLayout) {
@@ -64,6 +66,11 @@ class NutritionFragment: Fragment() {
         binding.favButton.setOnClickListener {
             findNavController().navigate(NutritionFragmentDirections.actionNutToTotal())
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.emptyFoods()
     }
 
 }

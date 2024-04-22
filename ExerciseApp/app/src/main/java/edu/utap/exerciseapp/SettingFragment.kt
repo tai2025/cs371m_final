@@ -40,10 +40,16 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = SettingFragBinding.bind(view)
+        if (viewModel.getCurUser().value?.getCoach() != null) {
+
+            binding.currcoachTV.text = viewModel.getCurUser().value?.getCoach()
+        }
+        binding.curremailTV.text = viewModel.getCurUser().value?.getEmail()
         binding.setCoach.setOnClickListener {
             val u = viewModel.getCurUser().value as UserModel
             if (u != null) {
                 u.setCoach(binding.coachET.text.toString())
+                binding.currcoachTV.text = binding.coachET.text.toString()
                 Log.d("whatsettings", "${currentUser?.uid!!}")
                 u.setUID(currentUser?.uid!!)
             }
