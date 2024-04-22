@@ -146,6 +146,7 @@ class MainActivity : AppCompatActivity() {
                                 Log.d("role", "${um.getRole()}")
                                 viewModel.setCurUser(um)
                                 if (um.getRole().equals("Coach")) {
+                                    Log.d("in coach", "should be in coach")
                                     binding.bottomNavigationView.visibility = View.GONE
                                     navController.safeNavigate(HomeFragmentDirections.actionHomeToCoach())
                                 }

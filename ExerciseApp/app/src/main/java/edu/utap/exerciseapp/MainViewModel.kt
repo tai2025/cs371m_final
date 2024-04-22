@@ -92,7 +92,10 @@ class MainViewModel : ViewModel() {
                                     id.nutrientId == 1005 }?.value ?: -1.0
                                 val cal: Double = food.foodNutrients.firstOrNull  { id ->
                                     id.nutrientId == 1008 }?.value ?: -1.0
-                                list.add(RetNut(name, company, cat, protein, fat, carb, cal))
+                                val nut = RetNut(name, company, cat, protein, fat, carb, cal)
+                                if(nut != null){
+                                    list.add(nut)
+                                }
                             }
                             foods.postValue(list)
                             Log.d("-------", "$list")
