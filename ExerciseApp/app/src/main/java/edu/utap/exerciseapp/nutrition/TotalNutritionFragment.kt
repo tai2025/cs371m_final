@@ -1,36 +1,44 @@
 package edu.utap.exerciseapp.nutrition
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.utap.exerciseapp.MainViewModel
-import edu.utap.exerciseapp.api.NutritionApi
-import edu.utap.exerciseapp.api.NutritionRepository
-import edu.utap.exerciseapp.api.RetNut
-import  edu.utap.exerciseapp.databinding.NutritionPageBinding
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import androidx.navigation.fragment.findNavController
+import edu.utap.exerciseapp.databinding.NutritionPageBinding
+import edu.utap.exerciseapp.databinding.TotalNutritionFragmentBinding
 
-
-class NutritionFragment: Fragment() {
-    private var _binding: NutritionPageBinding? = null
+class TotalNutritionFragment : Fragment() {
+    private var _binding: TotalNutritionFragmentBinding? = null
     private val binding get() = _binding!!
     private val viewModel : MainViewModel by activityViewModels()
+    private var totalCal = 0.0
+    private var totalProtein = 0.0
+    private var totalFat = 0.0
+    private var totalCarb = 0.0
 
-
-    private fun initAdapter(binding: NutritionPageBinding) {
+    private fun initAdapter(binding: TotalNutritionFragmentBinding) {
         val adapter = NutritionAdapter(viewModel)
-        viewModel.observeFoods().observe(viewLifecycleOwner) {
+        viewModel.observeFavFoods().observe(viewLifecycleOwner) {
+            totalCal = 0.0
+            totalProtein = 0.0
+            totalFat = 0.0
+            totalCarb = 0.0
+            it.forEach { ret ->
+                totalCal += ret.cal
+                totalProtein += ret.protein
+                totalFat += ret.fat
+                totalCarb += ret.carb
+            }
+            binding.totalProtein.text = totalProtein.toString()
+            binding.totalCals.text = totalCal.toString()
+            binding.totalCarb.text = totalCarb.toString()
+            binding.totalFat.text = totalFat.toString()
             adapter.replaceList(it)
             adapter.notifyDataSetChanged()
         }
@@ -50,7 +58,7 @@ class NutritionFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = NutritionPageBinding.inflate(inflater, container, false)
+        _binding = TotalNutritionFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -58,12 +66,5 @@ class NutritionFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAdapter(binding)
         initSwipeLayout(binding.swipeRefreshLayout)
-        binding.searchButton.setOnClickListener {
-            viewModel.searchFood(binding.searchBar.text.toString())
-        }
-        binding.favButton.setOnClickListener {
-            findNavController().navigate(NutritionFragmentDirections.actionNutToTotal())
-        }
     }
-
 }

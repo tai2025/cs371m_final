@@ -21,11 +21,20 @@
         android:id="@+id/search_button"
         android:text="Search"
         app:layout_constraintStart_toEndOf="@+id/search_bar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/search_bar"
         android:layout_margin="8dp"
         />
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/favButton"
+        app:layout_constraintStart_toEndOf="@id/search_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/swipeRefreshLayout"
+        android:background="@drawable/ic_favorite_black_24dp"
+        android:layout_margin="8dp"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
