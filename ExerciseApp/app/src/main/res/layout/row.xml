@@ -21,6 +21,7 @@
             android:id="@+id/date"
             android:text="date"
             app:layout_constraintBottom_toTopOf="@id/workoutTable"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -116,8 +117,20 @@
                         app:layout_constraintTop_toBottomOf="@id/workoutTable"
                         tools:ignore="MissingConstraints">
                     </Button>
+                    <ImageButton
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:id="@+id/remWorkout"
+                        android:src="@drawable/trash"
+                        android:scaleType="fitCenter"
+                        app:layout_constraintTop_toBottomOf="@id/workoutTable"
+                        app:layout_constraintStart_toEndOf="@id/date"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:ignore="MissingConstraints">
+                    </ImageButton>
                 </TableLayout>
             </HorizontalScrollView>
+
         </LinearLayout>
 <!--    <Button-->
 <!--        android:layout_width="wrap_content"-->

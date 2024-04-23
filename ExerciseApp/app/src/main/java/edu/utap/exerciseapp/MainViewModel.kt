@@ -1,7 +1,6 @@
 package edu.utap.exerciseapp
 
 import android.util.Log
-import android.widget.ImageView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,20 +10,14 @@ import edu.utap.exerciseapp.api.NutritionApi
 import edu.utap.exerciseapp.api.NutritionRepository
 import edu.utap.exerciseapp.api.RetNut
 import edu.utap.exerciseapp.glide.Glide
-import edu.utap.exerciseapp.model.PhotoMeta
 import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.model.WorkoutEntry
-import edu.utap.exerciseapp.view.TakePictureWrapper
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-enum class SortColumn {
-    TITLE,
-    SIZE
-}
-data class SortInfo(val sortColumn: SortColumn, val ascending: Boolean)
+
 class MainViewModel : ViewModel() {
     // It is a real bummer that we need to put this here, but we do because
     // it is computed elsewhere, then we launch the camera activity
@@ -136,6 +129,14 @@ class MainViewModel : ViewModel() {
         Log.d("proglistviewmodel", "${progList.value}")
     }
 
+    fun removeFromProgList(i: Int) {
+        val list = mutableListOf<WorkoutEntry>()
+        progList.value?.let { list.addAll(it.toList()) }
+        list.removeAt(i)
+        progList.setValue(list.toList())
+        Log.d("proglistviewmodel", "${progList.value}")
+    }
+
     fun updateProgList(i: Int, we: WorkoutEntry) {
         val list = mutableListOf<WorkoutEntry>()
         progList.value?.let { list.addAll(it.toList()) }
@@ -162,37 +163,11 @@ class MainViewModel : ViewModel() {
         pictureUUID = uuid
     }
     var pictureNameByUser = "" // String provided by the user
-    // LiveData for entire note list, all images
-    private var photoMetaList = MutableLiveData<List<PhotoMeta>>()
-    private var sortInfo = MutableLiveData(
-        SortInfo(SortColumn.TITLE, true))
+
     // Track current authenticated user
     private var currentAuthUser = invalidUser
-    // Firestore state
-    private val storage = Storage()
-    // Database access
-    private val dbHelp = ViewModelDBHelper()
 
 
-    /////////////////////////////////////////////////////////////
-    // Notes, memory cache and database interaction
-    fun fetchPhotoMeta(resultListener:()->Unit) {
-        dbHelp.fetchPhotoMeta(sortInfo.value!!) {
-            photoMetaList.postValue(it)
-            resultListener.invoke()
-        }
-    }
-    fun observePhotoMeta(): LiveData<List<PhotoMeta>> {
-        return photoMetaList
-    }
-    fun observeSortInfo(): LiveData<SortInfo> {
-        return sortInfo
-    }
-
-    fun sortInfoClick(sortColumn: SortColumn,
-                      resultListener: () -> Unit) {
-        // XXX User has changed sort info
-    }
 
     // MainActivity gets updates on this via live data and informs view model
     fun setCurrentAuthUser(user: User) {

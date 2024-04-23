@@ -98,6 +98,7 @@ class ProgramFragment: Fragment() {
             adapter.notifyDataSetChanged()
         }
 
+
     }
 
     override fun onPause() {

@@ -37,7 +37,7 @@ import java.time.LocalDate
 // So you can copy the old list, change it into a new list, then submit the new list.
 //
 // You can call adapterPosition to get the index of the selected item
-class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: Context, viewModel: MainViewModel) : RecyclerView.Adapter<ProgramAdapter.VH>() {
+class ProgramAdapter(private val workoutlist: MutableList<WorkoutEntry>, val context: Context, viewModel: MainViewModel) : RecyclerView.Adapter<ProgramAdapter.VH>() {
     var list = workoutlist
 
 
@@ -60,7 +60,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
         binding.date.setText("${workout.getLocalDate()}")
         table.findViewById<TextView>(R.id.tableEntryNum).setText("$position")
         if (table.childCount > 3) {
-            table.removeViews(3, table.childCount - 3)
+            table.removeViews(4, table.childCount - 4)
         }
         var count = 0
 
@@ -121,7 +121,7 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
                 val workoutentry = list.get((row.findViewById<TextView>(R.id.entryNum).text.toString()).toInt())
                 val exNum = row.findViewById<TextView>(R.id.exerciseNum).text.toString().toInt()
                 Log.d("tableview", "${table.getChildAt(exNum + 3)}")
-                table.removeViewAt(exNum + 3)
+                table.removeViewAt(exNum + 4)
                 workoutentry.list.removeAt(exNum)
                 vm.updateProgList(workoutentry.getEntryNum(), workoutentry)
                 notifyDataSetChanged()
@@ -164,13 +164,22 @@ class ProgramAdapter(private val workoutlist: List<WorkoutEntry>, val context: C
             row.findViewById<ImageButton>(R.id.deleteBut).setOnClickListener {
                 val workoutentry = list.get((row.findViewById<TextView>(R.id.entryNum).text.toString()).toInt())
                 val exNum = row.findViewById<TextView>(R.id.exerciseNum).text.toString().toInt()
-                table.removeViewAt(exNum + 3)
+                table.removeViewAt(exNum + 4)
                 if (row.findViewById<TextView>(R.id.added).text.equals("1")) {
                     workoutentry.list.removeAt(exNum)
                     vm.updateProgList(workoutentry.getEntryNum(), workoutentry)
                 }
                 notifyDataSetChanged()
             }
+
+        }
+        binding.remWorkout.setOnClickListener {
+
+            val addEntryNum = table.findViewById<TextView>(R.id.tableEntryNum).text.toString().toInt()
+            val workout = list[addEntryNum]
+            vm.removeFromProgList(workout.getEntryNum())
+            list.removeAt(addEntryNum)
+            notifyDataSetChanged()
 
         }
         }
