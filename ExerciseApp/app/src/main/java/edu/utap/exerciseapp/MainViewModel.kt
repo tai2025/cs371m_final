@@ -9,7 +9,6 @@ import edu.utap.exerciseapp.api.Nutrition
 import edu.utap.exerciseapp.api.NutritionApi
 import edu.utap.exerciseapp.api.NutritionRepository
 import edu.utap.exerciseapp.api.RetNut
-import edu.utap.exerciseapp.glide.Glide
 import edu.utap.exerciseapp.model.FoodModel
 import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.model.WorkoutEntry
@@ -62,6 +61,10 @@ class MainViewModel : ViewModel() {
             list.add(it.name)
         }
         return list
+    }
+
+    fun addFoodModel(food : FoodModel) {
+        foodsList.value!!.add(food)
     }
 
     fun observeFoodList(): MutableLiveData<MutableList<FoodModel>> {

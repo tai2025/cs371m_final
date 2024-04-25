@@ -8,23 +8,18 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.utap.exerciseapp.MainViewModel
-import edu.utap.exerciseapp.api.NutritionApi
-import edu.utap.exerciseapp.api.NutritionRepository
 import edu.utap.exerciseapp.api.RetNut
 import  edu.utap.exerciseapp.databinding.NutritionPageBinding
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import edu.utap.exerciseapp.model.FoodModel
 import kotlinx.coroutines.CoroutineScope
 
 
@@ -72,6 +67,58 @@ class NutritionFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (viewModel.getUID().value != null && viewModel.isQueried().value == false) {
+            viewModel.setQueried(true)
+            val uid = viewModel.getUID().value!!
+            CoroutineScope(Dispatchers.IO).launch {
+                db.collection("users").document(uid).collection("foods")
+                    .document("FoodsList")
+                    .get()
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            val document = it.result
+                            if (document.exists()) {
+                                val values = document.data?.values
+                                Log.d("firebase get", "$values")
+                                if (values != null) {
+                                    for (v in values) {
+                                        val l = v as ArrayList<Map<String, Any>>
+                                        for (m in l) {
+                                            Log.d("firebase get", "$m")
+                                            val name = m["name"]
+                                            val list = m["list"] as ArrayList<Map<String, Any>>
+                                            var retList = emptyList<RetNut>().toMutableList()
+                                            for (stat in list){
+                                                val carb = stat["carb"]
+                                                val cat = stat["cat"]
+                                                val protein = stat["protein"]
+                                                val fat = stat["fat"]
+                                                val name = stat["name"]
+                                                val company = stat["company"]
+                                                val cal = stat["cal"]
+                                                retList.add(
+                                                    RetNut(
+                                                        name.toString(),
+                                                        company.toString(),
+                                                        cat.toString(),
+                                                        protein.toString().toDouble(),
+                                                        fat.toString().toDouble(),
+                                                        carb.toString().toDouble(),
+                                                        cal.toString().toDouble())
+                                                )
+                                            }
+                                            viewModel.addFoodModel(FoodModel(retList, name.toString()))
+                                        }
+                                    }
+                                }
+                            }
+
+                        } else {
+                            Log.d("Error", "Error retrieving workout data")
+                        }
+                    }
+            }
+        }
         initAdapter(binding)
         initSwipeLayout(binding.swipeRefreshLayout)
         binding.searchButton.setOnClickListener {
