@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -21,16 +22,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import kotlinx.coroutines.CoroutineScope
 
 
 class NutritionFragment: Fragment() {
     private var _binding: NutritionPageBinding? = null
     private val binding get() = _binding!!
     private val viewModel : MainViewModel by activityViewModels()
+    var currentUser = FirebaseAuth.getInstance().currentUser
+    var db = FirebaseFirestore.getInstance()
 
 
     private fun initAdapter(binding: NutritionPageBinding) {
-        val adapter = NutritionAdapter(viewModel)
+        var list = viewModel.getListOfNames()
+        list.add(0, "")
+        val spinnerAdapter = ArrayAdapter(
+            binding.root.context,
+            android.R.layout.simple_spinner_item,
+            list
+        )
+        val adapter = NutritionAdapter(viewModel, spinnerAdapter)
         viewModel.observeFoods().observe(viewLifecycleOwner) {
             adapter.replaceList(it)
             adapter.notifyDataSetChanged()
@@ -71,6 +85,22 @@ class NutritionFragment: Fragment() {
     override fun onPause() {
         super.onPause()
         viewModel.emptyFoods()
+        if (currentUser != null) {
+            Log.d("Firestore", "Adding workouts to db")
+            val uid = viewModel.getUID().value!!
+            val docData: MutableMap<String, Any> = HashMap()
+            docData["foodies"] = viewModel.getList()
+            CoroutineScope(Dispatchers.IO).launch {
+                db.collection("users").document(uid).collection("foods")
+                    .document("FoodsList").set(docData, SetOptions.merge())
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Success")
+                    }
+                    .addOnFailureListener {
+                        Log.d("Firestore", "Error uploading workouts")
+                    }
+            }
+        }
     }
 
 }

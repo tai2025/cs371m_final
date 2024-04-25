@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
         run{
             navigate(direction)
         }
-        direction =SettingFragmentDirections.actionSettingFragmentToNut()
+        direction = SettingFragmentDirections.actionSettingFragmentToNut()
         currentDestination?.
         getAction(direction.actionId)?.
         run{

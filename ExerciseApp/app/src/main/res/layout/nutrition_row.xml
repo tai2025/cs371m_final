@@ -125,15 +125,23 @@
             android:layout_margin="8dp"
             />
 
-        <ImageView
-            android:id="@+id/rowFav"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:layout_weight="1"
+<!--        <ImageView-->
+<!--            android:id="@+id/rowFav"-->
+<!--            android:layout_width="24dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="12dp"-->
+<!--            android:layout_weight="1"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:src="@drawable/ic_favorite_border_black_24dp"/>-->
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/spinner"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/foodComp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_favorite_border_black_24dp"/>
+            />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

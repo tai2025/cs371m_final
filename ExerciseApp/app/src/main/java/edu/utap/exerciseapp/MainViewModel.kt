@@ -10,6 +10,7 @@ import edu.utap.exerciseapp.api.NutritionApi
 import edu.utap.exerciseapp.api.NutritionRepository
 import edu.utap.exerciseapp.api.RetNut
 import edu.utap.exerciseapp.glide.Glide
+import edu.utap.exerciseapp.model.FoodModel
 import edu.utap.exerciseapp.model.UserModel
 import edu.utap.exerciseapp.model.WorkoutEntry
 import kotlinx.coroutines.launch
@@ -33,7 +34,48 @@ class MainViewModel : ViewModel() {
     private var nutRepo = NutritionRepository(nutAPI)
     private var foods = MutableLiveData<List<RetNut>>()
     private var uid = MutableLiveData<String>()
-    private var favFoods = MutableLiveData<MutableList<RetNut>>(emptyList<RetNut>().toMutableList())
+    private var foodsList = MutableLiveData<MutableList<FoodModel>>(emptyList<FoodModel>().toMutableList())
+
+    fun newFoodList(name : String) {
+        foodsList.value!!.add(FoodModel(emptyList<RetNut>().toMutableList(), name))
+    }
+
+    fun addToList(pos : Int, item : RetNut) {
+        foodsList.value!![pos].list.add(item)
+    }
+
+    fun removeFromList(name : String, item : RetNut) {
+        foodsList.value!!.forEach {
+            if(it.name.equals(name)){
+                it.remove(item)
+            }
+        }
+    }
+
+    fun removeList(pos : Int) {
+        foodsList.value!!.removeAt(pos)
+    }
+
+    fun getListOfNames(): MutableList<String> {
+        val list = emptyList<String>().toMutableList()
+        foodsList.value!!.forEach {
+            list.add(it.name)
+        }
+        return list
+    }
+
+    fun observeFoodList(): MutableLiveData<MutableList<FoodModel>> {
+        return foodsList
+    }
+
+    fun getList(): List<FoodModel> {
+        if(foodsList.value == null){
+            return listOf<FoodModel>()
+        } else {
+            return foodsList.value!!
+        }
+    }
+
 
     fun setUid(u : String) {
         viewModelScope.launch {
@@ -45,20 +87,10 @@ class MainViewModel : ViewModel() {
         return uid
     }
 
-    fun observeFavFoods(): MutableLiveData<MutableList<RetNut>> {
-        return favFoods
-    }
+
 
     fun emptyFoods(){
         foods.postValue(emptyList())
-    }
-
-    fun addFav(newFav: RetNut) {
-        favFoods.value!!.add(newFav)
-    }
-
-    fun removeFav(remove: RetNut) {
-        favFoods.value!!.remove(remove)
     }
 
     fun searchFood(search : String){

@@ -60,15 +60,40 @@
         android:name="edu.utap.exerciseapp.nutrition.TotalNutritionFragment"
         android:label="total_nutrition"
         >
+        <argument
+            android:name="list"
+            app:argType="edu.utap.exerciseapp.model.FoodModel"/>
         <action
-            android:id="@+id/action_total_to_nut"
+            android:id="@+id/action_group_to_nut"
             app:destination="@+id/nutritionFragment"/>
         <action
-            android:id="@+id/action_nut_to_Calendar"
+            android:id="@+id/action_group_to_Calendar"
             app:destination="@id/calendarFragment"/>
         <action
-            android:id="@+id/action_nut_to_Settings"
+            android:id="@+id/action_group_to_Settings"
             app:destination="@id/settingFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/groupNutritionFragment"
+        android:name="edu.utap.exerciseapp.nutrition.GroupNutritionFragment"
+        android:label="group nutrition">
+        <action
+            android:id="@+id/action_group_to_nut"
+            app:destination="@+id/nutritionFragment"/>
+        <action
+            android:id="@+id/action_group_to_Calendar"
+            app:destination="@id/calendarFragment"/>
+        <action
+            android:id="@+id/action_group_to_Settings"
+            app:destination="@id/settingFragment"/>
+        <action
+            android:id="@+id/action_group_to_total"
+            app:destination="@+id/totalNutritionFragment">
+            <argument
+                android:name="list"
+                app:argType="edu.utap.exerciseapp.model.FoodModel"/>
+        </action>
     </fragment>
 
     <fragment
@@ -77,7 +102,7 @@
         android:label="nutrition">
         <action
             android:id="@+id/action_nut_to_total"
-            app:destination="@+id/totalNutritionFragment"/>
+            app:destination="@+id/groupNutritionFragment"/>
         <action
             android:id="@+id/action_nut_to_Calendar"
             app:destination="@id/calendarFragment"/>

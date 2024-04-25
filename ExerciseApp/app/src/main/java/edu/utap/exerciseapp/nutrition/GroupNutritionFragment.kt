@@ -5,33 +5,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import edu.utap.exerciseapp.MainViewModel
-import edu.utap.exerciseapp.databinding.TotalNutritionFragmentBinding
+import  edu.utap.exerciseapp.databinding.NutritionGroupFragmentBinding
 
-class TotalNutritionFragment() : Fragment() {
-    private var _binding: TotalNutritionFragmentBinding? = null
-    private val args: TotalNutritionFragmentArgs by navArgs()
+
+class GroupNutritionFragment : Fragment() {
+    private var _binding: NutritionGroupFragmentBinding? = null
     private val binding get() = _binding!!
     private val viewModel : MainViewModel by activityViewModels()
-    private var totalCal = 0.0
-    private var totalProtein = 0.0
-    private var totalFat = 0.0
-    private var totalCarb = 0.0
-
-    private fun initSwipeLayout(swipe : SwipeRefreshLayout) {
-        swipe.setOnRefreshListener {
-            swipe.isRefreshing = false
-        }
-
-    }
 
     private fun getPos(holder: RecyclerView.ViewHolder) : Int {
         val pos = holder.bindingAdapterPosition
@@ -55,7 +44,7 @@ class TotalNutritionFragment() : Fragment() {
                                       direction: Int) {
                     val position = getPos(viewHolder)
                     Log.d(javaClass.simpleName, "Swipe delete $position")
-                    viewModel.removeFromList(args.list.name, args.list.list[position])
+                    viewModel.removeList(position)
                 }
             }
         return ItemTouchHelper(simpleItemTouchCallback)
@@ -67,34 +56,37 @@ class TotalNutritionFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = TotalNutritionFragmentBinding.inflate(inflater, container, false)
+        _binding = NutritionGroupFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = NutritionAdapter(viewModel, null)
-        val list = args.list.list
-        totalCal = 0.0
-        totalProtein = 0.0
-        totalFat = 0.0
-        totalCarb = 0.0
-        list.forEach {ret ->
-            totalCal += ret.cal
-            totalProtein += ret.protein
-            totalFat += ret.fat
-            totalCarb += ret.carb
+        val adapter = GroupNutritionAdapter(viewModel) {
+            val action = GroupNutritionFragmentDirections.actionGroupToTotal(it)
+            findNavController().navigate(action)
         }
-        binding.totalProtein.text = String.format("%.2f", totalProtein)
-        binding.totalCals.text = String.format("%.2f", totalCal)
-        binding.totalCarb.text = String.format("%.2f", totalCarb)
-        binding.totalFat.text = String.format("%.2f", totalFat)
-        adapter.replaceList(list)
-        adapter.notifyDataSetChanged()
-        binding.recyclerView.adapter = adapter
-        binding.recyclerView.layoutManager = LinearLayoutManager(activity)
-        initSwipeLayout(binding.swipeRefreshLayout)
-        initTouchHelper().attachToRecyclerView(binding.recyclerView)
+        viewModel.observeFoodList().observe(viewLifecycleOwner) {
+            adapter.replaceList(it)
+            adapter.notifyDataSetChanged()
+        }
 
+        binding.GroupRecyclerView.adapter = adapter
+        binding.GroupRecyclerView.layoutManager = LinearLayoutManager(activity)
+        initTouchHelper().attachToRecyclerView(binding.GroupRecyclerView)
+
+        binding.addGroup.setOnClickListener {
+            if(binding.addName.text.isNullOrBlank()){
+                Toast.makeText(binding.root.context, "list needs name", Toast.LENGTH_LONG).show()
+            } else {
+                viewModel.newFoodList(binding.addName.text.toString())
+                binding.addName.setText("")
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 }
